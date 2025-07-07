@@ -335,10 +335,10 @@ for i in range(retry_atempt):
         print(f"Success at {i} attempt")
         break
     else:   
-        # response = requests.post(endpoint, params={"key": GOOGLE_API_KEY}, json=payload)
-        # response.raise_for_status()
-        # create_files(response)
-        # run_test()
+        response = requests.post(endpoint, params={"key": GOOGLE_API_KEY}, json=payload)
+        response.raise_for_status()
+        create_files(response)
+        run_test()
         git_push()
 
 

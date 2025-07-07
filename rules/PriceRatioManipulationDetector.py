@@ -8,12 +8,15 @@ class PriceRatioManipulationDetector(SolidityParserListener):
         self.violations = []
 
     def enterFunctionCall(self, ctx):
-        # This is a simplified check.  A more robust implementation would require data flow analysis.
-        # Here, we look for a function call that looks like price = token0.balance() / token1.balance()
-        text = ctx.getText()
-        if "/" in text and ".balance()" in text:
-            line = ctx.start.line
-            self.violations.append(f"❌ Price calculated by ratio of token balances at line {line}: {text}")
+        # Detect patterns like: `token0.balance() / token1.balance()`
+        try:
+            if ctx.identifier().getText() in ["getPrice","getSpotPrice", "calculatePrice","get_price"]:
+                if "balance" in ctx.getText() and "/" in ctx.getText():
+                    line = ctx.start.line
+                    self.violations.append(f"❌ Price calculated by ratio of token balances at line {line}: {ctx.getText()}")
+        except:
+            pass
+
 
     def get_violations(self):
         return self.violations
