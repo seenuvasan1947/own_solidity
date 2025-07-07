@@ -6,32 +6,15 @@ from SolidityParserListener import SolidityParserListener
 class PriceRatioManipulationDetector(SolidityParserListener):
     def __init__(self):
         self.violations = []
-        self.in_function_definition = False
-        self.current_function_name = None
 
-    def enterFunctionDefinition(self, ctx):
-        self.in_function_definition = True
-        self.current_function_name = ctx.identifier().getText() if ctx.identifier() else "anonymous"
-
-    def exitFunctionDefinition(self, ctx):
-        self.in_function_definition = False
-        self.current_function_name = None
-
-    def enterMulDivModOperation(self, ctx):
-        # Check if inside a function and if the operation involves identifiers that might represent token balances
-        if self.in_function_definition:
-            text = ctx.getText()
-            # Simple heuristic: Look for division or multiplication of variables.  A more robust solution would analyze the types of the variables.
-            if "/" in text or "*" in text:
-                # Extract the expressions on either side of the operator
-                left = ctx.expression(0).getText()
-                right = ctx.expression(1).getText()
-                
-                # Check if both sides are simple identifiers (likely token balances)
-                if left.isidentifier() and right.isidentifier():
-
-                    line = ctx.start.line
-                    self.violations.append(f"⚠️ Price calculated by ratio of token balances in function {self.current_function_name} at line {line}: {text}")
+    def enterExpression(self, ctx):
+        # Look for patterns like `token0.balance() / token1.balance()` or similar patterns
+        # that indicate a price calculation based on direct balance ratio.  This is a simplified
+        # detection and could be refined further with more sophisticated analysis.
+        text = ctx.getText()
+        if "/" in text and (".balance()" in text or ".totalSupply()" in text):
+            line = ctx.start.line
+            self.violations.append(f"❌ Price calculated by ratio of token balances at line {line}: {text}. This is vulnerable to price manipulation.")
 
     def get_violations(self):
         return self.violations

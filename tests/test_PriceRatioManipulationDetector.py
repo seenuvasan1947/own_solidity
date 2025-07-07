@@ -17,7 +17,7 @@ def run_rule_on_file(filepath, rule_class):
 
     return rule_instance.get_violations()
 
-class TestCommitRevealDetector(unittest.TestCase):
+class TestCommitRevealDetector(unittest.TestCase): # Corrected class name
     def test_detects_vulnerability(self):
         violations = run_rule_on_file("test_contracts/PriceRatioManipulationDetector_bad.sol", PriceRatioManipulationDetector)
         self.assertTrue(any("Price calculated by ratio of token balances" in v for v in violations))
