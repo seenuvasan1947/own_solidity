@@ -17,6 +17,7 @@ with open("SolidityParser.g4", "r") as f:
     code = f.read()
 # with open("test_contracts/FrontRunningDetector_bad.sol", "r") as f:
 #     result_responce = f.read()
+subprocess.run(f"rm  test_result.txt", shell=True)
 try:
     with open("test_result.txt", 'r') as f:
         data = f.read()
@@ -27,7 +28,7 @@ except FileNotFoundError:
 def git_push():
     
     commands = [
-    ["git", "add", "."],
+    ["git", "add", "."],    
     ["git", "commit", "-m", "Auto commit from Python"],
     ["git", "push"]
 ]
@@ -136,10 +137,10 @@ Given the following vulnerability metadata:
 
 ---
 ID: SOL-AM-DA-1 
-Category: Price Manipulation Attack
-Question: "Is the price calculated from DEX liquidity pool spot prices?"  
-Description: "Spot price readings derived directly from DEX liquidity pools are vulnerable to manipulation through flash loans that can temporarily drain the pools."  
-Remediation: "Use TWAP (time-weighted average price) with appropriate time windows based on asset volatility and liquidity, or use reliable oracle solutions.."
+Category: Reentrancy Attack
+Question: "Is there a view function that can return a stale value during interactions?"  
+Description: "Read-only reentrancy. The read-only reentrancy is a reentrancy scenario where a view function is reentered, which in most cases is unguarded as it does not modify the contract's state. However, if the state is inconsistent, wrong values could be reported. Other protocols relying on a return value can be tricked into reading the wrong state to perform unwanted actions."  
+Remediation: "Extend the reentrancy guard to the view functions as well."
 ---
 
 Generate the following:
