@@ -1,19 +1,23 @@
 pragma solidity ^0.8.0;
 
-interface IOracle {
-    function getPrice() external view returns (uint);
-}
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
-contract SafeContract {
-    IOracle public oracle;
+contract SafePriceFeed is Ownable {
+    AggregatorV3Interface public priceFeed;
 
-    constructor(IOracle _oracle) {
-        oracle = _oracle;
+    constructor(address _priceFeed) {
+        priceFeed = AggregatorV3Interface(_priceFeed);
     }
 
-    function calculateValue() public view returns (uint) {
-        // Safe: Using price from a reliable oracle.
-        uint price = oracle.getPrice();
-        return price * 100;
+    function getLatestPrice() public view returns (int) {
+        (
+            uint80 roundID,
+            int price,
+            uint startedAt,
+            uint timeStamp,
+            uint80 answeredInRound
+        ) = priceFeed.latestRoundData();
+        return price;
     }
 }
