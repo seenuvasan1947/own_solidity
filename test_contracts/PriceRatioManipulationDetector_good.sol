@@ -1,21 +1,23 @@
 pragma solidity ^0.8.0;
 
-// Using a Mock Oracle for price feed
-contract PriceManipulationSafe {
-    uint256 public price;
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
-    function updatePrice(uint256 _price) public {
-        //OnlyOwner
-        price = _price;
+contract SafePriceFeed {
+    AggregatorV3Interface public priceFeed;
+
+    constructor(address _priceFeed) {
+        priceFeed = AggregatorV3Interface(_priceFeed);
     }
 
-    function getPriceFromOracle() public view returns (uint256) {
-        // Returns price from a trusted source (oracle)
+    function getLatestPrice() public view returns (int) {
+        (
+            uint80 roundID,
+            int price,
+            uint startedAt,
+            uint timeStamp,
+            uint80 answeredInRound
+        ) = priceFeed.latestRoundData();
         return price;
-    }
-
-    function calculateSomething(uint256 amount) public view returns (uint256 result){
-        uint256 currentPrice = getPriceFromOracle();
-        result = amount * currentPrice;
     }
 }

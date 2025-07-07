@@ -19,12 +19,9 @@ def run_rule_on_file(filepath, rule_class):
 
 class TestPriceRatioManipulationDetector(unittest.TestCase):
     def test_detects_price_manipulation(self):
-        violations = run_rule_on_file("test_contracts/PriceRatioManipulationDetector_bad.sol", PriceRatioManipulationDetector)
-        self.assertTrue(any("Price manipulation risk" in v for v in violations))
+        violations = run_rule_on_file("test_contracts/PriceManipulation_bad.sol", PriceRatioManipulationDetector)
+        self.assertTrue(any("Price derived directly from DEX liquidity pool" in v for v in violations), f"Violations: {violations}")
 
     def test_ignores_safe_contract(self):
-        violations = run_rule_on_file("test_contracts/PriceRatioManipulationDetector_good.sol", PriceRatioManipulationDetector)
+        violations = run_rule_on_file("test_contracts/PriceManipulation_good.sol", PriceRatioManipulationDetector)
         self.assertEqual(len(violations), 0, f"Expected 0 violations, got: {violations}")
-
-if __name__ == "__main__":
-    unittest.main()
