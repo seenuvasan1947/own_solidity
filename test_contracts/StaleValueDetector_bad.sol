@@ -1,25 +1,24 @@
 pragma solidity ^0.8.0;
 
+interface IBadDependency {
+    function getValue() external view returns (uint256);
+}
+
 contract VulnerableContract {
-    uint256 public value;
-    address public owner;
+    IBadDependency public dependency;
+    uint256 public myValue;
 
-    constructor() {
-        owner = msg.sender;
-        value = 10;
+    constructor(IBadDependency _dependency) {
+        dependency = _dependency;
+        myValue = 10;
     }
 
-    function getValue() public view returns (uint256) {
-        // Simulate an external call that might change the state in another contract.
-        // In a real-world scenario, this would be an actual external call.
-        if (block.number % 2 == 0) {
-            value = 20; // Simulate state change during the call.
-        }
-        return value; // Returns a potentially stale value.
+    function getStaleValue() public view returns (uint256) {
+        uint256 externalValue = dependency.getValue(); // External call
+        return myValue + externalValue; // Stale value because dependency might change myValue
     }
 
-    function changeValue(uint256 newValue) public {
-        require(msg.sender == owner, "Only owner can change the value");
-        value = newValue;
+    function updateMyValue(uint256 _newValue) public {
+        myValue = _newValue;
     }
 }

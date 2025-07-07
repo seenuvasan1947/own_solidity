@@ -1,13 +1,53 @@
-.F
+EE
 ======================================================================
-FAIL: test_ignores_safe_contract (tests.test_StaleValueDetector.TestStaleValueDetector)
+ERROR: test_detects_stale_value (tests.test_StaleValueDetector.TestStaleValueDetector)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/test_StaleValueDetector.py", line 27, in test_ignores_safe_contract
-    self.assertEqual(len(violations), 0, f"Expected 0 violations, got: {violations}")
-AssertionError: 1 != 0 : Expected 0 violations, got: ["❌ Potential stale value in view function 'getValue' at line 23: Access to state variable 'value' during potential reentrancy."]
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/test_StaleValueDetector.py", line 22, in test_detects_stale_value
+    violations = run_rule_on_file("test_contracts/StaleValueDetector_bad.sol", StaleValueDetector)
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/test_StaleValueDetector.py", line 16, in run_rule_on_file
+    walker.walk(rule_instance, tree)
+  File "/home/finstein-emp/.local/lib/python3.8/site-packages/antlr4/tree/Tree.py", line 160, in walk
+    self.walk(listener, child)
+  File "/home/finstein-emp/.local/lib/python3.8/site-packages/antlr4/tree/Tree.py", line 160, in walk
+    self.walk(listener, child)
+  File "/home/finstein-emp/.local/lib/python3.8/site-packages/antlr4/tree/Tree.py", line 160, in walk
+    self.walk(listener, child)
+  File "/home/finstein-emp/.local/lib/python3.8/site-packages/antlr4/tree/Tree.py", line 158, in walk
+    self.enterRule(listener, t)
+  File "/home/finstein-emp/.local/lib/python3.8/site-packages/antlr4/tree/Tree.py", line 178, in enterRule
+    ctx.enterRule(listener)
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/SolidityParser.py", line 3822, in enterRule
+    listener.enterStateVariableDeclaration(self)
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/rules/StaleValueDetector.py", line 19, in enterStateVariableDeclaration
+    name = ctx.name.text
+AttributeError: 'IdentifierContext' object has no attribute 'text'
+
+======================================================================
+ERROR: test_ignores_safe_contract (tests.test_StaleValueDetector.TestStaleValueDetector)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/test_StaleValueDetector.py", line 26, in test_ignores_safe_contract
+    violations = run_rule_on_file("test_contracts/StaleValueDetector_good.sol", StaleValueDetector)
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/test_StaleValueDetector.py", line 16, in run_rule_on_file
+    walker.walk(rule_instance, tree)
+  File "/home/finstein-emp/.local/lib/python3.8/site-packages/antlr4/tree/Tree.py", line 160, in walk
+    self.walk(listener, child)
+  File "/home/finstein-emp/.local/lib/python3.8/site-packages/antlr4/tree/Tree.py", line 160, in walk
+    self.walk(listener, child)
+  File "/home/finstein-emp/.local/lib/python3.8/site-packages/antlr4/tree/Tree.py", line 160, in walk
+    self.walk(listener, child)
+  File "/home/finstein-emp/.local/lib/python3.8/site-packages/antlr4/tree/Tree.py", line 158, in walk
+    self.enterRule(listener, t)
+  File "/home/finstein-emp/.local/lib/python3.8/site-packages/antlr4/tree/Tree.py", line 178, in enterRule
+    ctx.enterRule(listener)
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/SolidityParser.py", line 3822, in enterRule
+    listener.enterStateVariableDeclaration(self)
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/rules/StaleValueDetector.py", line 19, in enterStateVariableDeclaration
+    name = ctx.name.text
+AttributeError: 'IdentifierContext' object has no attribute 'text'
 
 ----------------------------------------------------------------------
-Ran 2 tests in 0.087s
+Ran 2 tests in 0.068s
 
-FAILED (failures=1)
+FAILED (errors=2)

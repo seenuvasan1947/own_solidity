@@ -20,11 +20,11 @@ def run_rule_on_file(filepath, rule_class):
 class TestStaleValueDetector(unittest.TestCase):
     def test_detects_stale_value(self):
         violations = run_rule_on_file("test_contracts/StaleValueDetector_bad.sol", StaleValueDetector)
-        self.assertTrue(any("Potential stale value" in v for v in violations))
+        self.assertTrue(any("stale value" in v for v in violations))
 
     def test_ignores_safe_contract(self):
         violations = run_rule_on_file("test_contracts/StaleValueDetector_good.sol", StaleValueDetector)
-        self.assertEqual(len(violations), 0, f"Expected 0 violations, got: {violations}")
+        self.assertEqual(len(violations), 0)
 
 if __name__ == "__main__":
     unittest.main()

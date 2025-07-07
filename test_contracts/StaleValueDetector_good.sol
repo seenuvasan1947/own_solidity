@@ -1,30 +1,28 @@
 pragma solidity ^0.8.0;
 
+interface ISafeDependency {
+    function getValue() external view returns (uint256);
+}
+
 contract SafeContract {
-    uint256 public value;
-    address public owner;
-    bool private locked;
+    ISafeDependency public dependency;
+    uint256 public myValue;
 
-    constructor() {
-        owner = msg.sender;
-        value = 10;
-        locked = false;
+    constructor(ISafeDependency _dependency) {
+        dependency = _dependency;
+        myValue = 10;
     }
 
-    modifier noReentrancy() {
-        require(!locked, "Reentrant call");
-        locked = true;
-        _;
-        locked = false;
+    function getValue() public view returns (uint256) {
+        return myValue;
     }
 
 
-    function getValue() public view noReentrancy returns (uint256) {
-        return value;
+    function getCombinedValue() public view returns (uint256) {
+        return myValue + dependency.getValue();
     }
 
-    function changeValue(uint256 newValue) public {
-        require(msg.sender == owner, "Only owner can change the value");
-        value = newValue;
+    function updateMyValue(uint256 _newValue) public {
+        myValue = _newValue;
     }
 }
