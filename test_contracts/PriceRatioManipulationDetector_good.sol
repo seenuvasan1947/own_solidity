@@ -3,23 +3,21 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
-contract PriceFeedConsumer {
-    AggregatorV3Interface internal priceFeed;
+contract SafePriceOracle {
+    AggregatorV3Interface public priceFeed;
 
-    /**
-     * Network: Sepolia
-     * Aggregator: ETH / USD
-     * Address: 0x694AA17696899952f4E0cbd354cB470de8E5a030
-     */
-    constructor() {
-        priceFeed = AggregatorV3Interface(0x694AA17696899952f4E0cbd354cB470de8E5a030);
+    constructor(address _priceFeed) {
+        priceFeed = AggregatorV3Interface(_priceFeed);
     }
 
-    /**
-     * Returns the latest ETH / USD price
-     */
-    function getLatestPrice() public view returns (int) {
-        (, int price, , , ) = priceFeed.latestRoundData();
-        return price;
+    function getPrice() public view returns (uint256) {
+        (
+            /* uint80 roundID */,
+            int price,
+            /* uint startedAt */,
+            /* uint timeStamp */,
+            /* uint80 answeredInRound */
+        ) = priceFeed.latestRoundData();
+        return uint256(price);
     }
 }
