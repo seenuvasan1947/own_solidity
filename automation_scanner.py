@@ -28,7 +28,7 @@ except FileNotFoundError:
 def git_push():
     
     commands = [
-    ["git", "add", "."],    
+    ["git", "add", "."],
     ["git", "commit", "-m", "Auto commit from Python"],
     ["git", "push"]
 ]
