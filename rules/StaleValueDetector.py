@@ -5,32 +5,38 @@ from SolidityParserListener import SolidityParserListener
 
 class StaleValueDetector(SolidityParserListener):
     def __init__(self):
-        self.in_view_function = False
-        self.function_name = ""
         self.violations = []
+        self.current_function_name = None
+        self.is_view_function = False
+        self.state_variables = set()
+
+    def enterStateVariableDeclaration(self, ctx):
+        """Collect state variables."""
+        name_ctx = ctx.identifier()
+        if name_ctx:
+            self.state_variables.add(name_ctx.getText())
+
 
     def enterFunctionDefinition(self, ctx):
-        self.function_name = ctx.identifier().getText() if ctx.identifier() else "fallback/receive"  # Handle fallback/receive functions
+        """Check if function is a view function."""
+        self.current_function_name = ctx.identifier().getText() if ctx.identifier() else None
+        self.is_view_function = False
 
-        # Check for 'view' stateMutability
-        for i in range(ctx.getChildCount()):
-            if ctx.getChild(i).getText() == "view":
-                self.in_view_function = True
+        for modifier in ctx.getChildren():
+            if modifier.getText() == "view":
+                self.is_view_function = True
                 break
 
     def exitFunctionDefinition(self, ctx):
-        self.in_view_function = False
-        self.function_name = ""
+        """Reset function context."""
+        self.current_function_name = None
+        self.is_view_function = False
 
-    def enterFunctionCall(self, ctx):
-        if self.in_view_function:
-            # This is a simplified check.  A real-world detector would need to
-            # analyze the called function to see if it *could* modify state
-            # indirectly (e.g., calling another contract).
-            function_call_text = ctx.getText().lower()
-            if "call" in function_call_text or "delegatecall" in function_call_text or "staticcall" in function_call_text or "send" in function_call_text or "transfer" in function_call_text:
-                line = ctx.start.line
-                self.violations.append(f"❌ Potential stale value returned by view function '{self.function_name}' at line {line}: Function call '{ctx.getText()}' might lead to inconsistent state being read.")
+    def enterIdentifier(self, ctx):
+        """Check for state variable access within view functions."""
+        if self.is_view_function and ctx.getText() in self.state_variables:
+            line = ctx.start.line
+            self.violations.append(f"❌ Potential stale value in view function '{self.current_function_name}' at line {line}: Access to state variable '{ctx.getText()}' during potential reentrancy.")
 
 
     def get_violations(self):
