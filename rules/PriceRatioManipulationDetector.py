@@ -6,15 +6,21 @@ from SolidityParserListener import SolidityParserListener
 class PriceRatioManipulationDetector(SolidityParserListener):
     def __init__(self):
         self.violations = []
+        self.in_function = False
 
-    def enterExpression(self, ctx):
-        # Look for patterns like `token0.balance() / token1.balance()` or similar patterns
-        # that indicate a price calculation based on direct balance ratio.  This is a simplified
-        # detection and could be refined further with more sophisticated analysis.
-        text = ctx.getText()
-        if "/" in text and (".balance()" in text or ".totalSupply()" in text):
+    def enterFunctionDefinition(self, ctx):
+        self.in_function = True
+
+    def exitFunctionDefinition(self, ctx):
+        self.in_function = False
+
+    def enterFunctionCall(self, ctx):
+        if not self.in_function:
+            return
+        function_name = ctx.expression().getText()
+        if "getReserves" in function_name or "getPrice" in function_name:
             line = ctx.start.line
-            self.violations.append(f"❌ Price calculated by ratio of token balances at line {line}: {text}. This is vulnerable to price manipulation.")
+            self.violations.append(f"❌ Vulnerable price calculation at line {line}: Price derived directly from DEX liquidity pool via {function_name}.")
 
     def get_violations(self):
         return self.violations

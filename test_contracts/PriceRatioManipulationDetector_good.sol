@@ -1,23 +1,18 @@
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+interface IDEX {
+    function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
+}
 
-contract PriceFeedSafe {
-    AggregatorV3Interface public priceFeed;
+contract SafePriceCalculation {
+    uint public lastPrice;
 
-    constructor(address _priceFeed) {
-        priceFeed = AggregatorV3Interface(_priceFeed);
+    function updatePrice(uint newPrice) public {
+        lastPrice = newPrice;
     }
 
-    function getLatestPrice() public view returns (int) {
-        (
-            uint80 roundID,
-            int price,
-            uint startedAt,
-            uint timeStamp,
-            uint80 answeredInRound
-        ) = priceFeed.latestRoundData();
-        return price;
+    function calculatePrice() public view returns (uint) {
+        //Returning a stored price that is ideally sourced from a TWAP oracle
+        return lastPrice;
     }
 }

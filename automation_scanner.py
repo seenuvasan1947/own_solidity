@@ -112,7 +112,7 @@ def create_files(response):
 
 def run_test():
 
-    system_call = f"python3 -m unittest /home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/solidity/tests/test_{class_name}.py "
+    system_call = f"python3 -m unittest /home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/test_{class_name}.py "
 
     result = subprocess.run(system_call, shell=True, capture_output=True, text=True)
 
