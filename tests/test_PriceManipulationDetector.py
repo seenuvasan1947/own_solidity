@@ -2,7 +2,7 @@ import unittest
 from antlr4 import *
 from SolidityLexer import SolidityLexer
 from SolidityParser import SolidityParser
-from rules.PriceManipulationDetector import PriceManipulationDetector
+from rules.PriceManipulationDetector import PriceManipulationDetector  # import your rule
 
 def run_rule_on_file(filepath, rule_class):
     input_stream = FileStream(filepath)
@@ -17,10 +17,10 @@ def run_rule_on_file(filepath, rule_class):
 
     return rule_instance.get_violations()
 
-class TestCommitRevealDetector(unittest.TestCase):
-    def test_detects_vulnerability(self):
+class TestPriceManipulationDetector(unittest.TestCase):
+    def test_detects_price_manipulation(self):
         violations = run_rule_on_file("test_contracts/PriceManipulationDetector_bad.sol", PriceManipulationDetector)
-        self.assertTrue(len(violations) > 0, "Vulnerability should be detected")
+        self.assertTrue(any("DEX liquidity pool spot price" in v for v in violations))
 
     def test_ignores_safe_contract(self):
         violations = run_rule_on_file("test_contracts/PriceManipulationDetector_good.sol", PriceManipulationDetector)

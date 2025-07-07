@@ -1,12 +1,12 @@
 E
 ======================================================================
-ERROR: test_PriceRatioManipulationDetector (unittest.loader._FailedTest)
+ERROR: test_PriceManipulationDetector (unittest.loader._FailedTest)
 ----------------------------------------------------------------------
-ImportError: Failed to import test module: test_PriceRatioManipulationDetector
+ImportError: Failed to import test module: test_PriceManipulationDetector
 Traceback (most recent call last):
   File "/usr/lib/python3.8/unittest/loader.py", line 154, in loadTestsFromName
     module = __import__(module_name)
-ModuleNotFoundError: No module named 'tests.test_PriceRatioManipulationDetector'
+ModuleNotFoundError: No module named 'tests.test_PriceManipulationDetector'
 
 
 ----------------------------------------------------------------------
