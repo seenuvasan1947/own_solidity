@@ -53,3 +53,5 @@ logs/
 # scroll
 src/utils/scroll_api_tracker.json
 src/utils/scroll_api_tracker_api_endpoint.json
+
+sonar-venv/
