@@ -8,11 +8,12 @@ class PriceManipulationDetector(SolidityParserListener):
         self.violations = []
 
     def enterFunctionCall(self, ctx):
-        # Check if the function call involves DEX liquidity pool spot price
-        text = ctx.getText().lower()
-        if ("uniswap" in text or "pancakeswap" in text or "sushiswap" in text) and ("getreserves()" in text or "getamountsout" in text or "getamountin" in text):
+        # Look for function calls that might be getting spot prices directly.
+        # This is a simplified check and can be refined with more specific DEX function names.
+        function_text = ctx.getText().lower()
+        if ("getprice" in function_text or "currentprice" in function_text or "getPrice" in function_text or "get_price" in function_text) and "twap" not in function_text:  # Add check to exclude TWAP
             line = ctx.start.line
-            self.violations.append(f"❌ Price calculated from DEX liquidity pool spot price at line {line}: {ctx.getText()}")
+            self.violations.append(f"❌ Possible price manipulation vulnerability at line {line}: Direct DEX price usage detected. Consider using TWAP or oracles. Function Call: {function_text}")
 
     def get_violations(self):
         return self.violations
