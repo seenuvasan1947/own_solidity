@@ -7,12 +7,12 @@ interface IOracle {
 contract SafeContract {
     IOracle public oracle;
 
-    constructor(address _oracle) {
-        oracle = IOracle(_oracle);
+    constructor(IOracle _oracle) {
+        oracle = _oracle;
     }
 
     function calculateValue() public view returns (uint) {
-        // Using an oracle for price feed.
+        // Safe: Using price from a reliable oracle.
         uint price = oracle.getPrice();
         return price * 100;
     }

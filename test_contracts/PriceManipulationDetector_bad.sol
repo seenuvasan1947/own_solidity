@@ -1,19 +1,19 @@
 pragma solidity ^0.8.0;
 
-interface IDEX {
-    function getPrice() external view returns (uint);
+interface IDex {
+    function get_price() external view returns (uint);
 }
 
 contract VulnerableContract {
-    IDEX public dex;
+    IDex public dex;
 
-    constructor(address _dex) {
-        dex = IDEX(_dex);
+    constructor(IDex _dex) {
+        dex = _dex;
     }
 
     function calculateValue() public view returns (uint) {
-        // Directly using DEX spot price. Vulnerable to manipulation.
-        uint price = dex.getPrice();
+        // Vulnerable: Directly using DEX spot price.
+        uint price = dex.get_price();
         return price * 100;
     }
 }
