@@ -8,37 +8,50 @@ class StaleValueDetector(SolidityParserListener):
         self.violations = []
         self.current_function_name = None
         self.is_view_function = False
+        self.external_call_present = False
 
     def enterFunctionDefinition(self, ctx):
-        self.current_function_name = ctx.identifier().getText() if ctx.identifier() else 'anonymous'
+        self.current_function_name = ctx.identifier().getText() if ctx.identifier() else "fallback/receive" # Handles fallback/receive cases
         self.is_view_function = False
-        for modifier in ctx.getChildren():
-            if modifier.getText() == 'view':
+        self.external_call_present = False
+
+        # Check for view or pure state mutability
+        for i in range(ctx.getChildCount()):
+            if ctx.getChild(i).getText() in ["view", "pure"]:
                 self.is_view_function = True
                 break
 
+
     def exitFunctionDefinition(self, ctx):
+        if self.is_view_function and self.external_call_present:
+            line = ctx.start.line
+            self.violations.append(f"❌ SOL-AM-DA-1: Stale value risk in view function '{self.current_function_name}' at line {line}. It contains external calls and may return inconsistent data.")
+
         self.current_function_name = None
         self.is_view_function = False
-
-    def enterContractDefinition(self, ctx):
-        self.contract_name = ctx.name.text
-
-    def exitContractDefinition(self, ctx):
-        self.contract_name = None
+        self.external_call_present = False
 
 
     def enterFunctionCall(self, ctx):
-        if self.is_view_function:
-            function_call_text = ctx.getText()
-            # A more sophisticated check could involve looking at what the function call does
-            # and whether it might lead to an inconsistent state.  For now, flag all external calls.
-            if "(" in function_call_text and "." in function_call_text and not function_call_text.startswith(self.contract_name):
-                line = ctx.start.line
-                self.violations.append(f"❌ Potential stale value in view function '{self.current_function_name}' at line {line}: External function call '{function_call_text}' might return inconsistent data.")
+        # Check for external function calls
+        try:
+            # basic check
+            potential_identifier_path = ctx.expression().getText()
+            if "(" not in potential_identifier_path:
+               return
+
+
+            first_node = ctx.expression().getChild(0)
+
+            if isinstance(first_node, SolidityParser.IdentifierContext):
+                 self.external_call_present = True  # Mark external call
+
+            elif isinstance(first_node, SolidityParser.MemberAccessContext):
+
+                self.external_call_present = True
+        except:
+            pass
+
 
     def get_violations(self):
         return self.violations
-
-
--
