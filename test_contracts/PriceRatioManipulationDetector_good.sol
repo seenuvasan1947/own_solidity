@@ -1,18 +1,21 @@
 pragma solidity ^0.8.0;
 
-interface IDEX {
-    function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
-}
+// Using a Mock Oracle for price feed
+contract PriceManipulationSafe {
+    uint256 public price;
 
-contract SafePriceCalculation {
-    uint public lastPrice;
-
-    function updatePrice(uint newPrice) public {
-        lastPrice = newPrice;
+    function updatePrice(uint256 _price) public {
+        //OnlyOwner
+        price = _price;
     }
 
-    function calculatePrice() public view returns (uint) {
-        //Returning a stored price that is ideally sourced from a TWAP oracle
-        return lastPrice;
+    function getPriceFromOracle() public view returns (uint256) {
+        // Returns price from a trusted source (oracle)
+        return price;
+    }
+
+    function calculateSomething(uint256 amount) public view returns (uint256 result){
+        uint256 currentPrice = getPriceFromOracle();
+        result = amount * currentPrice;
     }
 }
