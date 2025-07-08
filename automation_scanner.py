@@ -26,11 +26,11 @@ except FileNotFoundError:
     data = "" 
     
     
-def git_push():
+def git_push(i,class_name):
     
     commands = [
     ["git", "add", "."],
-    ["git", "commit", "-m", "Auto commit from Python"],
+    ["git", "commit", "-m", f"Auto commit from Python {i} for {class_name}"],
     ["git", "push"]
 ]
     repo_path = "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity"
@@ -355,7 +355,7 @@ for i in range(retry_atempt):
         )
         create_files(response)
         run_test()
-        git_push()
+        git_push(i,class_name)
 
 
 
