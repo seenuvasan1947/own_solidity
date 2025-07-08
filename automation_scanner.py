@@ -126,7 +126,7 @@ def run_test():
 
 # 2. Load the Gemini model
 # model = genai.GenerativeModel("models/gemini-1.5-flash")
-endpoint="https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+endpoint="https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
 # 3. Define your prompt
 prompt =f"""
 You are an expert in smart contract security and static code analysis using ANTLR in Python.
@@ -137,10 +137,10 @@ Given the following vulnerability metadata:
 
 ---
 ID: SOL-AM-DA-1 
-Category: Reentrancy Attack
-Question: "Is there a view function that can return a stale value during interactions?"  
-Description: "Read-only reentrancy. The read-only reentrancy is a reentrancy scenario where a view function is reentered, which in most cases is unguarded as it does not modify the contract's state. However, if the state is inconsistent, wrong values could be reported. Other protocols relying on a return value can be tricked into reading the wrong state to perform unwanted actions."  
-Remediation: "Extend the reentrancy guard to the view functions as well."
+Category: Initialization
+Question: "Are important state variables initialized properly?"  
+Description: "Overlooking explicit initialization of state variables can lead to critical issues."  
+Remediation: "Make sure to initialize all state variables correctly."
 ---
 
 Generate the following:
