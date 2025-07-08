@@ -2,7 +2,7 @@ import unittest
 from antlr4 import *
 from SolidityLexer import SolidityLexer
 from SolidityParser import SolidityParser
-from rules.StateVariableInitializationDetector import StateVariableInitializationDetector
+from rules.StateVariableInitializationDetector import StateVariableInitializationDetector  # import your rule
 
 def run_rule_on_file(filepath, rule_class):
     input_stream = FileStream(filepath)

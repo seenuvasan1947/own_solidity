@@ -8,6 +8,6 @@ contract GoodContract {
     }
 
     function doSomething() public {
-        // Some operation
+        // Some logic
     }
 }

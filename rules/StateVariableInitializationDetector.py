@@ -5,14 +5,13 @@ from SolidityParserListener import SolidityParserListener
 
 class StateVariableInitializationDetector(SolidityParserListener):
     def __init__(self):
-        self.state_variables = {}
         self.violations = []
 
     def enterStateVariableDeclaration(self, ctx):
-        var_name = ctx.name.getText()
-        if ctx.initialValue() is None:
+        # Check if state variable is initialized
+        if ctx.assign() is None and ctx.getChild(0).getText() not in ['constant', 'immutable']:
             line = ctx.start.line
-            self.violations.append(f"❌ Uninitialized state variable '{var_name}' at line {line}")
+            self.violations.append(f"❌ Uninitialized state variable at line {line}: {ctx.getText()}")
 
     def get_violations(self):
         return self.violations
