@@ -7,6 +7,9 @@ import re
 import requests
 import subprocess
 import openai
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # 1. Set your Gemini API key
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -340,7 +343,7 @@ for i in range(retry_atempt):
         # response = requests.post(endpoint, params={"key": GOOGLE_API_KEY}, json=payload)
         # response.raise_for_status()
         response = openai.ChatCompletion.create(
-            model="gpt-4",  # or another appropriate model
+            model="gpt-4o-mini",  # or another appropriate model
             messages=[
                 {
                     "role": "system",
