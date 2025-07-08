@@ -4,21 +4,32 @@ from SolidityParser import SolidityParser
 from SolidityParserListener import SolidityParserListener
 
 class UninitializedStateVariableDetector(SolidityParserListener):
+    """
+    Detects state variables that are declared but not explicitly initialized.
+    Uninitialized state variables rely on default values, which can lead to
+    misunderstandings or subtle bugs if not explicitly intended.
+    """
     def __init__(self):
         self.violations = []
 
     def enterStateVariableDeclaration(self, ctx: SolidityParser.StateVariableDeclarationContext):
-        # A state variable declaration is considered uninitialized if the 'initialValue' context is None.
-        # This checks for the absence of the ' = expression' part in the declaration.
+        """
+        Called when the parser enters a stateVariableDeclaration rule.
+        Checks if the state variable has an initial value assigned (`Assign expression`).
+        """
+        # The 'stateVariableDeclaration' rule in the grammar is:
+        # stateVariableDeclaration : type = typeName ... name = identifier (Assign initialValue = expression)? Semicolon;
+        # We check if the 'initialValue' context is None, which means the (Assign initialValue = expression)? part was not present.
         if ctx.initialValue is None:
-            variable_name = ctx.name.text
+            variable_name = ctx.name.text if ctx.name else "unknown_variable"
             line = ctx.start.line
             self.violations.append(
                 f"❌ Uninitialized state variable '{variable_name}' at line {line}: "
-                f"State variable is declared but not explicitly initialized. "
-                f"It will be initialized to its default value (e.g., 0 for integers, address(0) for addresses, empty for strings, etc.). "
-                f"Consider explicit initialization for clarity and security."
+                "State variables should be explicitly initialized to prevent relying on default values implicitly."
             )
 
     def get_violations(self):
+        """
+        Returns the list of detected uninitialized state variable violations.
+        """
         return self.violations

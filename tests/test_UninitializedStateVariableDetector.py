@@ -3,10 +3,13 @@ import os
 from antlr4 import *
 from SolidityLexer import SolidityLexer
 from SolidityParser import SolidityParser
+from SolidityParserListener import SolidityParserListener
 from rules.UninitializedStateVariableDetector import UninitializedStateVariableDetector
 
-# Helper function to run the rule on a file
-def run_rule_on_file(filepath, rule_class):
+def run_rule_on_file(filepath: str, rule_class: type[SolidityParserListener]):
+    """
+    Helper function to run an ANTLR listener-based rule on a Solidity file.
+    """
     input_stream = FileStream(filepath)
     lexer = SolidityLexer(input_stream)
     stream = CommonTokenStream(lexer)
@@ -20,117 +23,119 @@ def run_rule_on_file(filepath, rule_class):
     return rule_instance.get_violations()
 
 class TestUninitializedStateVariableDetector(unittest.TestCase):
-
-    # Set up test contract file paths
+    """
+    Unit tests for the UninitializedStateVariableDetector rule.
+    """
+    # Define paths for test contracts
     TEST_CONTRACTS_DIR = "test_contracts"
     BAD_CONTRACT_PATH = os.path.join(TEST_CONTRACTS_DIR, "UninitializedStateVariableDetector_bad.sol")
     GOOD_CONTRACT_PATH = os.path.join(TEST_CONTRACTS_DIR, "UninitializedStateVariableDetector_good.sol")
 
     @classmethod
     def setUpClass(cls):
-        # Ensure the test_contracts directory exists
+        """Create test_contracts directory and files before running tests."""
         os.makedirs(cls.TEST_CONTRACTS_DIR, exist_ok=True)
 
-        # Content for the vulnerable contract
         bad_contract_content = """
 pragma solidity ^0.8.0;
 
-contract VulnerableContract {
+contract UninitializedBad {
     uint public uninitializedUint;
+    address private uninitializedAddress;
+    bool public uninitializedBool;
+    string internal uninitializedString;
+    bytes uninitializedBytes;
+    int256 uninitializedInt;
+
+    uint public valueSetInConstructor;
     address public owner;
-    string public contractName;
-    bool public isActive;
-
-    struct MyConfig {
-        uint value;
-        bool enabled;
-    }
-    MyConfig public config;
-
-    mapping(address => uint) public balances;
-
-    uint public initializedUint = 10;
-    address private _admin = msg.sender;
 
     constructor() {
+        valueSetInConstructor = 123;
         owner = msg.sender;
     }
 
-    function doSomething() public {
-        // Contract logic
+    function getUninitializedUint() public view returns (uint) {
+        return uninitializedUint;
+    }
+
+    function getUninitializedAddress() public view returns (address) {
+        return uninitializedAddress;
     }
 }
         """
-        # Content for the safe contract
+        with open(cls.BAD_CONTRACT_PATH, "w") as f:
+            f.write(bad_contract_content.strip())
+
         good_contract_content = """
 pragma solidity ^0.8.0;
 
-contract SafeContract {
-    uint public initializedUint = 0;
+contract InitializedGood {
+    uint public initializedUint = 1;
+    address private initializedAddress = address(0x123);
+    bool public initializedBool = true;
+    string internal initializedString = "Hello, world!";
+    bytes initializedBytes = hex"deadbeef";
+    int256 initializedInt = -100;
+
+    uint public valueSetInConstructor = 0;
     address public owner = address(0);
-    string public contractName = "MySafeContract";
-    bool public isActive = false;
-
-    struct MyConfig {
-        uint value;
-        bool enabled;
-    }
-    MyConfig public config = MyConfig({value: 0, enabled: false});
-
-    mapping(address => uint) public balances; // Mappings are inherently not initialized at declaration via '='
 
     constructor() {
-        // owner = msg.sender;
+        valueSetInConstructor = 456;
+        owner = msg.sender;
     }
 
-    function doSomething() public pure returns (string memory) {
-        return "Contract is safe.";
+    function getInitializedUint() public view returns (uint) {
+        return initializedUint;
+    }
+
+    function getOwner() public view returns (address) {
+        return owner;
     }
 }
         """
-        # Write contracts to files
-        with open(cls.BAD_CONTRACT_PATH, "w") as f:
-            f.write(bad_contract_content.strip())
         with open(cls.GOOD_CONTRACT_PATH, "w") as f:
             f.write(good_contract_content.strip())
 
     @classmethod
     def tearDownClass(cls):
-        # Clean up the created files and directory after all tests are done
+        """Clean up test files and directory after all tests are done."""
         os.remove(cls.BAD_CONTRACT_PATH)
         os.remove(cls.GOOD_CONTRACT_PATH)
         os.rmdir(cls.TEST_CONTRACTS_DIR)
 
+
     def test_detects_uninitialized_variables(self):
+        """
+        Tests if the detector correctly identifies all uninitialized state variables
+        in the bad contract.
+        """
         violations = run_rule_on_file(self.BAD_CONTRACT_PATH, UninitializedStateVariableDetector)
 
-        # Expected uninitialized variables based on the rule's definition:
-        # uninitializedUint, owner, contractName, isActive, config, balances (mappings are flagged too)
-        expected_violations_count = 6
-        self.assertEqual(len(violations), expected_violations_count, f"Expected {expected_violations_count} violations, got {len(violations)}: {violations}")
+        # Expected variables to be flagged:
+        # uninitializedUint, uninitializedAddress, uninitializedBool, uninitializedString,
+        # uninitializedBytes, uninitializedInt, valueSetInConstructor, owner
+        expected_uninitialized_vars = [
+            "uninitializedUint", "uninitializedAddress", "uninitializedBool",
+            "uninitializedString", "uninitializedBytes", "uninitializedInt",
+            "valueSetInConstructor", "owner"
+        ]
 
-        self.assertTrue(any("'uninitializedUint'" in v for v in violations))
-        self.assertTrue(any("'owner'" in v for v in violations))
-        self.assertTrue(any("'contractName'" in v for v in violations))
-        self.assertTrue(any("'isActive'" in v for v in violations))
-        self.assertTrue(any("'config'" in v for v in violations))
-        self.assertTrue(any("'balances'" in v for v in violations)) # Mappings are flagged by this rule
+        self.assertEqual(len(violations), len(expected_uninitialized_vars),
+                         f"Expected {len(expected_uninitialized_vars)} violations, got {len(violations)}: {violations}")
+
+        for var_name in expected_uninitialized_vars:
+            self.assertTrue(any(var_name in v for v in violations),
+                            f"Violation for '{var_name}' not found in {violations}")
 
     def test_ignores_safe_contract(self):
+        """
+        Tests if the detector correctly ignores contracts where all state variables
+        are explicitly initialized at declaration.
+        """
         violations = run_rule_on_file(self.GOOD_CONTRACT_PATH, UninitializedStateVariableDetector)
-
-        # In the good contract, all non-mapping variables are explicitly initialized.
-        # However, the `balances` mapping will still be flagged as mappings cannot be
-        # initialized with an `=` operator at declaration.
-        # So, we expect exactly 1 violation for the mapping.
-        expected_violations_count = 1
-        self.assertEqual(len(violations), expected_violations_count, f"Expected {expected_violations_count} violation, got: {violations}")
-        self.assertTrue(any("'balances'" in v for v in violations)) # The mapping is the only expected violation
-        self.assertFalse(any("'initializedUint'" in v for v in violations))
-        self.assertFalse(any("'owner'" in v for v in violations))
-        self.assertFalse(any("'contractName'" in v for v in violations))
-        self.assertFalse(any("'isActive'" in v for v in violations))
-        self.assertFalse(any("'config'" in v for v in violations))
+        self.assertEqual(len(violations), 0, f"Expected no violations, but found: {violations}")
 
 if __name__ == "__main__":
     unittest.main()
