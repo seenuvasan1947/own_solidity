@@ -9,7 +9,7 @@ import subprocess
 import openai
 
 # 1. Set your Gemini API key
-GOOGLE_API_KEY = "AIzaSyBU091JAs3ZoONpaiovnvkGdvn42V4_W7o"
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 # genai.configure(api_key=GOOGLE_API_KEY)
 retry_atempt = 1
 openai.api_key = os.getenv("OPENAI_API_KEY")
