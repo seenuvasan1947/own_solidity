@@ -14,7 +14,7 @@ load_dotenv()
 # 1. Set your Gemini API key
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 # genai.configure(api_key=GOOGLE_API_KEY)
-retry_atempt = 1
+retry_atempt = 3
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 with open("SolidityParser.g4", "r") as f:

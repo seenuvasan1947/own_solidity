@@ -1,14 +1,13 @@
 pragma solidity ^0.8.0;
 
 contract GoodContract {
-    uint256 public x;
-    address public owner;
+    uint256 initializedVariable;
 
     constructor() {
-        owner = msg.sender; // 'owner' is initialized properly.
+        initializedVariable = 10;
     }
 
-    function setX(uint256 _x) public {
-        x = _x;
+    function doSomething() public {
+        // Some operation
     }
 }

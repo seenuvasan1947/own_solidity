@@ -2,7 +2,7 @@ import unittest
 from antlr4 import *
 from SolidityLexer import SolidityLexer
 from SolidityParser import SolidityParser
-from rules.StateVariableInitializationDetector import StateVariableInitializationDetector  # import your rule
+from rules.StateVariableInitializationDetector import StateVariableInitializationDetector
 
 def run_rule_on_file(filepath, rule_class):
     input_stream = FileStream(filepath)
@@ -22,7 +22,7 @@ class TestStateVariableInitializationDetector(unittest.TestCase):
         violations = run_rule_on_file("test_contracts/StateVariableInitializationDetector_bad.sol", StateVariableInitializationDetector)
         self.assertTrue(any("Uninitialized state variable" in v for v in violations))
 
-    def test_ignores_initialized_variable_contract(self):
+    def test_ignores_initialized_variable(self):
         violations = run_rule_on_file("test_contracts/StateVariableInitializationDetector_good.sol", StateVariableInitializationDetector)
         self.assertEqual(len(violations), 0)
 
