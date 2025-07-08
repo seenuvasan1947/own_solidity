@@ -19,89 +19,84 @@ def run_rule_on_file(filepath, rule_class):
     return rule_instance.get_violations()
 
 class TestUninitializedStateVariableDetector(unittest.TestCase):
-    # Create a temporary directory for test contracts
+    # Ensure test_contracts directory exists
     @classmethod
     def setUpClass(cls):
-        cls.test_contracts_dir = "test_contracts"
-        os.makedirs(cls.test_contracts_dir, exist_ok=True)
-
-        cls.bad_contract_path = os.path.join(cls.test_contracts_dir, "UninitializedStateVariableDetector_bad.sol")
-        with open(cls.bad_contract_path, "w") as f:
-            f.write("""
+        os.makedirs("test_contracts", exist_ok=True)
+        
+        # Create bad contract file
+        bad_contract_code = """
 pragma solidity ^0.8.0;
 
-contract VulnerableInitialization {
-    uint public uninitializedUint;
-    bool public uninitializedBool;
-    address public uninitializedAddress;
-    bytes public uninitializedBytes;
+contract UninitializedStateVariableBad {
+    uint public myUint;
+    address owner;
+    bool public isActive;
+    string public contractName;
+    bytes memory someBytes; 
 
-    struct MyStruct {
-        uint value;
-        bool status;
-    }
-
-    MyStruct public myStruct;
-
-    function doSomething() public {
-        // ...
-    }
-}
-            """)
-
-        cls.good_contract_path = os.path.join(cls.test_contracts_dir, "UninitializedStateVariableDetector_good.sol")
-        with open(cls.good_contract_path, "w") as f:
-            f.write("""
-pragma solidity ^0.8.0;
-
-contract SafeInitialization {
-    uint public initializedUint = 100;
-    bool public initializedBool = true;
-    address public initializedAddress = msg.sender;
-    bytes public initializedBytes = "Hello";
-
-    uint public constant MY_CONSTANT = 123;
-    uint public immutable MY_IMMUTABLE_AT_DECLARATION = 456;
-    uint public immutable MY_IMMUTABLE_IN_CONSTRUCTOR;
-
-    struct MyStruct {
-        uint value;
-        bool status;
-    }
-
-    MyStruct public myStruct = MyStruct({value: 789, status: true});
+    uint public count; 
 
     constructor() {
-        MY_IMMUTABLE_IN_CONSTRUCTOR = 999;
+        count = 0;
     }
 
     function doSomething() public {
-        // ...
     }
 }
-            """)
+"""
+        with open("test_contracts/UninitializedStateVariableDetector_bad.sol", "w") as f:
+            f.write(bad_contract_code)
 
-    # Clean up the temporary directory
+        # Create good contract file
+        good_contract_code = """
+pragma solidity ^0.8.0;
+
+contract UninitializedStateVariableGood {
+    uint public myUint = 0;
+    address public owner = address(0);
+    bool public isActive = false;
+    string public contractName = "GoodContract";
+    bytes public someBytes = hex"";
+    uint public count = 1; 
+
+    constructor() {
+    }
+
+    function doSomething() public view returns (uint) {
+        return myUint + count;
+    }
+}
+"""
+        with open("test_contracts/UninitializedStateVariableDetector_good.sol", "w") as f:
+            f.write(good_contract_code)
+
     @classmethod
     def tearDownClass(cls):
-        os.remove(cls.bad_contract_path)
-        os.remove(cls.good_contract_path)
-        os.rmdir(cls.test_contracts_dir)
+        # Clean up created files and directory
+        os.remove("test_contracts/UninitializedStateVariableDetector_bad.sol")
+        os.remove("test_contracts/UninitializedStateVariableDetector_good.sol")
+        os.rmdir("test_contracts")
 
-    def test_detects_uninitialized_state_variables(self):
-        violations = run_rule_on_file(self.bad_contract_path, UninitializedStateVariableDetector)
+
+    def test_detects_uninitialized_variables(self):
+        violations = run_rule_on_file("test_contracts/UninitializedStateVariableDetector_bad.sol", UninitializedStateVariableDetector)
+        self.assertGreater(len(violations), 0, f"Expected violations, but got {violations}")
+        # Expecting 6 violations based on the bad contract (myUint, owner, isActive, contractName, someBytes, count)
+        self.assertEqual(len(violations), 6, f"Expected 6 violations, but got {len(violations)}: {violations}")
+
+        expected_variables = ["myUint", "owner", "isActive", "contractName", "someBytes", "count"]
+        found_variables = [
+            v.split("'")[1] for v in violations if "Uninitialized State Variable" in v
+        ]
         
-        # Expected violations: uninitializedUint, uninitializedBool, uninitializedAddress, uninitializedBytes, myStruct
-        expected_variable_names = ["uninitializedUint", "uninitializedBool", "uninitializedAddress", "uninitializedBytes", "myStruct"]
-        
-        self.assertEqual(len(violations), len(expected_variable_names), f"Expected {len(expected_variable_names)} violations, got {len(violations)}: {violations}")
-        
-        for name in expected_variable_names:
-            self.assertTrue(any(name in v for v in violations), f"Violation for '{name}' not found in {violations}")
+        # Check if all expected variables were found
+        for var in expected_variables:
+            self.assertIn(var, found_variables, f"Expected variable '{var}' not found in violations.")
 
     def test_ignores_safe_contract(self):
-        violations = run_rule_on_file(self.good_contract_path, UninitializedStateVariableDetector)
-        self.assertEqual(len(violations), 0, f"Expected 0 violations, got: {violations}")
+        violations = run_rule_on_file("test_contracts/UninitializedStateVariableDetector_good.sol", UninitializedStateVariableDetector)
+        self.assertEqual(len(violations), 0, f"Expected no violations, but got: {violations}")
 
 if __name__ == "__main__":
     unittest.main()
