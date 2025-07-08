@@ -1,13 +1,29 @@
-..E
+FFE
 ======================================================================
 ERROR: tearDownClass (tests.test_UninitializedStateVariableDetector.TestUninitializedStateVariableDetector)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/test_UninitializedStateVariableDetector.py", line 92, in tearDownClass
-    os.rmdir(cls.TEST_CONTRACTS_DIR)
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/test_UninitializedStateVariableDetector.py", line 75, in tearDownClass
+    os.rmdir("test_contracts")
 OSError: [Errno 39] Directory not empty: 'test_contracts'
+
+======================================================================
+FAIL: test_detects_uninitialized_variables (tests.test_UninitializedStateVariableDetector.TestUninitializedStateVariableDetector)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/test_UninitializedStateVariableDetector.py", line 94, in test_detects_uninitialized_variables
+    self.assertIn('9', violation_lines)
+AssertionError: '9' not found in {'8', '7', '6', '5'}
+
+======================================================================
+FAIL: test_ignores_initialized_variables (tests.test_UninitializedStateVariableDetector.TestUninitializedStateVariableDetector)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/test_UninitializedStateVariableDetector.py", line 100, in test_ignores_initialized_variables
+    self.assertEqual(len(violations), 0, f"Should not detect violations in a properly initialized contract, but got: {violations}")
+AssertionError: 1 != 0 : Should not detect violations in a properly initialized contract, but got: ["❌ Uninitialized state variable 'owner' at line 6: State variables should be explicitly initialized to prevent critical issues from default zero values."]
 
 ----------------------------------------------------------------------
 Ran 2 tests in 0.032s
 
-FAILED (errors=1)
+FAILED (failures=2, errors=1)
