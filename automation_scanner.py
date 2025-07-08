@@ -42,9 +42,9 @@ def git_push():
 
 def create_files(response):
 
-    json_response = response.json()
-    text = json_response["candidates"][0]["content"]["parts"][0]["text"]
-
+        # json_response = response.json()
+        # text = json_response["candidates"][0]["content"]["parts"][0]["text"]
+    text = response.choices[0].message.content
     # print(text)
 
     # 5. Split the response by section markers
@@ -337,8 +337,22 @@ for i in range(retry_atempt):
         print(f"Success at {i} attempt")
         break
     else:   
-        response = requests.post(endpoint, params={"key": GOOGLE_API_KEY}, json=payload)
-        response.raise_for_status()
+        # response = requests.post(endpoint, params={"key": GOOGLE_API_KEY}, json=payload)
+        # response.raise_for_status()
+        response = openai.ChatCompletion.create(
+            model="gpt-4",  # or another appropriate model
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are an expert in smart contract security and static code analysis using ANTLR in Python."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.7
+        )
         create_files(response)
         run_test()
         git_push()
