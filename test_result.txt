@@ -1,22 +1,21 @@
+F.E
+======================================================================
+ERROR: tearDownClass (tests.test_UninitializedStateVariableDetector.TestUninitializedStateVariableDetector)
+----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/usr/lib/python3.8/runpy.py", line 194, in _run_module_as_main
-    return _run_code(code, main_globals, None,
-  File "/usr/lib/python3.8/runpy.py", line 87, in _run_code
-    exec(code, run_globals)
-  File "/usr/lib/python3.8/unittest/__main__.py", line 18, in <module>
-    main(module=None)
-  File "/usr/lib/python3.8/unittest/main.py", line 100, in __init__
-    self.parseArgs(argv)
-  File "/usr/lib/python3.8/unittest/main.py", line 147, in parseArgs
-    self.createTests()
-  File "/usr/lib/python3.8/unittest/main.py", line 158, in createTests
-    self.test = self.testLoader.loadTestsFromNames(self.testNames,
-  File "/usr/lib/python3.8/unittest/loader.py", line 220, in loadTestsFromNames
-    suites = [self.loadTestsFromName(name, module) for name in names]
-  File "/usr/lib/python3.8/unittest/loader.py", line 220, in <listcomp>
-    suites = [self.loadTestsFromName(name, module) for name in names]
-  File "/usr/lib/python3.8/unittest/loader.py", line 154, in loadTestsFromName
-    module = __import__(module_name)
-  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/test_UninitializedStateVariableDetector.py", line 9, in <module>
-    def run_rule_on_file(filepath: str, rule_class: type[SolidityParserListener]):
-TypeError: 'type' object is not subscriptable
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/test_UninitializedStateVariableDetector.py", line 89, in tearDownClass
+    os.rmdir(cls.test_contracts_dir)
+OSError: [Errno 39] Directory not empty: 'test_contracts'
+
+======================================================================
+FAIL: test_detects_uninitialized_state_variables (tests.test_UninitializedStateVariableDetector.TestUninitializedStateVariableDetector)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/test_UninitializedStateVariableDetector.py", line 97, in test_detects_uninitialized_state_variables
+    self.assertEqual(len(violations), len(expected_variable_names), f"Expected {len(expected_variable_names)} violations, got {len(violations)}: {violations}")
+AssertionError: 0 != 5 : Expected 5 violations, got 0: []
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.037s
+
+FAILED (failures=1, errors=1)
