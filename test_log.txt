@@ -46,3 +46,20 @@ AssertionError: 1 != 0 : Expected 0 violations, got: ["❌ [SOL-Basics-Function-
 Ran 2 tests in 0.063s
 
 FAILED (failures=1)
+
+
+python3 -m unittest tests/VisibilityStrictnessDetector.py
+.F
+======================================================================
+FAIL: test_passes_necessary_public (tests.VisibilityStrictnessDetector.TestVisibilityStrictnessDetector)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/VisibilityStrictnessDetector.py", line 25, in test_passes_necessary_public
+    self.assertEqual(len(violations), 0, f"Expected 0 violations, got: {violations}")
+AssertionError: 1 != 0 : Expected 0 violations, got: ["❌ [SOL-Basics-Function-7] Function 'callDoSomething' of contract 'GoodVisibility' at line 9 is 'public' but is only called internally. Consider making it 'internal' or 'private'."]
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.021s
+
+FAILED (failures=1)
+finstein-emp@finstein-pf40w887:~/cyber_product/own/own_source_code_analyser/own_solidity$ 
