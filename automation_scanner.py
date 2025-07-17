@@ -8,26 +8,82 @@ import requests
 import subprocess
 import openai
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 
 # 1. Set your Gemini API key
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 # genai.configure(api_key=GOOGLE_API_KEY)
-retry_atempt = 3
+retry_atempt = 1
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 with open("SolidityParser.g4", "r") as f:
     code = f.read()
 # with open("test_contracts/FrontRunningDetector_bad.sol", "r") as f:
 #     result_responce = f.read()
-subprocess.run(f"rm  test_result.txt", shell=True)
-try:
-    with open("test_result.txt", 'r') as f:
-        data = f.read()
-except FileNotFoundError:
-    data = "" 
+# subprocess.run(f"rm  test_result.txt", shell=True)
+# try:
+#     with open("test_result.txt", 'r') as f:
+#         data = f.read()
+# except FileNotFoundError:
+#     data = "" 
     
+def process_json():
+    i=0
+    with open("data_source.json", "r") as f:
+        data = json.load(f)
+    for main_item in data:
+        main_category = main_item["category"]
+        main_description = main_item["description"]
+        print(f"main_category: {main_category}, main_description: {main_description}")
+        # break
+        i+=1
+        for sub_item in main_item["data"]:
+       
+            if "category" in sub_item and "data" in sub_item:
+                # print(f"sub_item: {sub_item}")
+                sub_category = sub_item["category"]
+                sub_description = sub_item["description"]
+                
+                for data_item in sub_item["data"]:
+                    if "id" in data_item:
+                        id=data_item["id"]
+                        question = data_item["question"]
+                        description = data_item["description"]
+                        remediation = data_item["remediation"]
+                        reference = data_item["references"]
+                        tag = data_item["tags"]
+                    elif "category" in data_item:
+                        sub_sub_category = data_item["category"]
+                        sub_sub_description = data_item["description"]
+                        for data_item_2 in data_item["data"]:
+                            if "id" in data_item_2:
+                                id=data_item_2["id"]
+                                question = data_item_2["question"]
+                                description = data_item_2["description"]
+                                remediation = data_item_2["remediation"]
+                                reference = data_item_2["references"]
+                                tag = data_item_2["tags"]
+                print(f"  id:{id},sub_category:{sub_category}")  
+                # print
+                # print(f"sub_category: {sub_category}, sub_description: {sub_description}, question: {question}, description: {description}, remediation: {remediation}, reference: {reference}, tag: {tag}")
+            # break
+            elif  "id" in sub_item and "question" in sub_item:
+                # print(f"sub_item: {sub_item}")
+                id=sub_item["id"]
+                question = sub_item["question"]
+                description = sub_item["description"]
+                remediation = sub_item["remediation"]
+                reference = sub_item["references"]
+                tag = sub_item["tags"]
+                print(f" elseif id:{id}")
+               
+        # print(main_item["data"][0]["data"][0]["question"])
+        # print(main_category,main_description,sub_category,sub_description,question,description,remediation,reference,tag)
+        print(f"i:{i}")
+        # if i==10:
+        #     break
     
 def git_push(i,class_name):
     
@@ -291,9 +347,7 @@ and for grammer use the grammer file provided.
 
 {code}
 
-and  i got it as responce while test 
 
-{data}
 
 IMPORTANT: 
 file name is important. so make sure it works fine and usige of filename at test is also be consious 
@@ -340,8 +394,11 @@ for i in range(retry_atempt):
         print(f"Success at {i} attempt")
         break
     else:   
-        response = requests.post(endpoint, params={"key": GOOGLE_API_KEY}, json=payload)
-        response.raise_for_status()
+        process_json()
+        
+        # response = requests.post(endpoint, params={"key": GOOGLE_API_KEY}, json=payload)
+        # response.raise_for_status()
+
         # response = openai.ChatCompletion.create(
         #     model="gpt-4o-mini",  # or another appropriate model
         #     messages=[
@@ -356,9 +413,9 @@ for i in range(retry_atempt):
         #     ],
         #     temperature=0.7
         # )
-        create_files(response)
-        run_test()
-        git_push(i,class_name)
+        # create_files(response)
+        # run_test()
+        # git_push(i,class_name)
 
 
 

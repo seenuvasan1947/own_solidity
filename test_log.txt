@@ -1,0 +1,48 @@
+python3 -m unittest tests/FrontRunningDetector.py 
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.046s
+
+OK
+(sonar-venv) finstein-emp@finstein-pf40w887:~/cyber_product/own/own_source_code_analyser/own_solidity$ python3 -m unittest tests/CommentsCoherenceDetector.py 
+F.
+======================================================================
+FAIL: test_detects_incoherent_comments (tests.CommentsCoherenceDetector.TestCommentsCoherenceDetector)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/CommentsCoherenceDetector.py", line 21, in test_detects_incoherent_comments
+    self.assertTrue(any("Comment coherence issue" in v for v in violations))
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.052s
+
+FAILED (failures=1)
+(sonar-venv) finstein-emp@finstein-pf40w887:~/cyber_product/own/own_source_code_analyser/own_solidity$ python3 -m unittest tests/EdgeCaseInputDetector.py 
+.F
+======================================================================
+FAIL: test_passes_edge_case_validation (tests.EdgeCaseInputDetector.TestEdgeCaseInputDetector)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/EdgeCaseInputDetector.py", line 25, in test_passes_edge_case_validation
+    self.assertEqual(len(violations), 0, f"Expected 0 violations, got: {violations}")
+AssertionError: 1 != 0 : Expected 0 violations, got: ["❌ [SOL-Basics-Function-5] Missing edge case validation in function 'divide' of contract 'GoodEdgeCases' at line 14: Parameters [numerator] lack validation for edge cases (0, max values)."]
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.048s
+
+FAILED (failures=1)
+(sonar-venv) finstein-emp@finstein-pf40w887:~/cyber_product/own/own_source_code_analyser/own_solidity$ python3 -m unittest tests/ArbitraryUserInputDetector.py 
+.F
+======================================================================
+FAIL: test_passes_safe_contract (tests.ArbitraryUserInputDetector.TestArbitraryUserInputDetector)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/finstein-emp/cyber_product/own/own_source_code_analyser/own_solidity/tests/ArbitraryUserInputDetector.py", line 25, in test_passes_safe_contract
+    self.assertEqual(len(violations), 0, f"Expected 0 violations, got: {violations}")
+AssertionError: 1 != 0 : Expected 0 violations, got: ["❌ [SOL-Basics-Function-6] Security risk in function 'safeCall' of contract 'GoodArbitraryInput' at line 16: Function accepts arbitrary user input and makes low-level calls without proper validation."]
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.063s
+
+FAILED (failures=1)
