@@ -63,3 +63,35 @@ Ran 2 tests in 0.021s
 
 FAILED (failures=1)
 finstein-emp@finstein-pf40w887:~/cyber_product/own/own_source_code_analyser/own_solidity$ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+python3 -m unittest tests/AcesscontrolDetector.py 
+
+----------------------------------------------------------------------
+Ran 0 tests in 0.000s
+
+OK
+finstein-emp@finstein-pf40w887:~/cyber_product/own/own_source_code_analyser/own_solidity$ python3 bug_detection_solidity.py 
+Traceback (most recent call last):
+  File "bug_detection_solidity.py", line 43, in <module>
+    parse_solidity_code("test/MyContract.sol")
+  File "bug_detection_solidity.py", line 34, in parse_solidity_code
+    rule_instances = load_all_rule_classes(RULES_DIR)
+  File "bug_detection_solidity.py", line 21, in load_all_rule_classes
+    rule_class = getattr(mod, class_name)
+AttributeError: module 'AcesscontrolDetector' has no attribute 'AcesscontrolDetector'
+finstein-emp@finstein-pf40w887:~/cyber_product/own/own_source_code_analyser/own_solidity$ 
+
+
+i think file name issue

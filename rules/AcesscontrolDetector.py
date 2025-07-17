@@ -1,4 +1,9 @@
 from SolidityParserListener import SolidityParserListener
+from antlr4 import *
+from SolidityLexer import SolidityLexer
+from SolidityParser import SolidityParser
+from SolidityParserListener import SolidityParserListener
+import re
 
 class AccessControlDetector(SolidityParserListener):
     def __init__(self):

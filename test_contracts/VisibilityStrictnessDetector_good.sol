@@ -6,7 +6,7 @@ contract GoodVisibility {
         // This function is intended to be called externally
     }
     
-    function callDoSomething() public {
-        doSomething();
+    function internalHelper() internal {
+        // This is internal, so it's fine
     }
 } 

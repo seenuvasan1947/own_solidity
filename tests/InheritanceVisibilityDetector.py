@@ -18,6 +18,7 @@ def run_rule_on_file(filepath, rule_class):
 class TestInheritanceVisibilityDetector(unittest.TestCase):
     def test_detects_unrestricted_parent_funcs(self):
         violations = run_rule_on_file("test_contracts/InheritanceVisibilityDetector_bad.sol", InheritanceVisibilityDetector)
+        print("Violations:", violations)
         self.assertTrue(any("not overridden/limited" in v for v in violations))
     def test_ignores_limited_inherited(self):
         violations = run_rule_on_file("test_contracts/InheritanceVisibilityDetector_good.sol", InheritanceVisibilityDetector)
