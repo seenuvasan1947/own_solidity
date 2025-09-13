@@ -9,7 +9,8 @@ now we are going to do  @SCWE-001.md
 
 refer this doc and provide rule to properrly detct this type of bug 
 
-and rule and testfilenamelooklike <ruleCode>_<bugname>
+and rule and testfilenamelooklike <bugname>
+and finle name and class name should be exaculy same and in side rule in comment menton rule code 
 
 here rulecode is like 001 
 
