@@ -1,0 +1,20 @@
+now you see @bug_detection_solidity.py 
+
+it automaticallu take all rules from @rules/  folder ok and it find bugs fine now we need to do one thing that is we are going to generate an rule that uses antlr grammer ok to fing find bugs in solidity in proper  alll asppect of that code based on this rule for   list  of gguide for rule i have and for now we are going do  ok use this grammer or underatnsd solidity @SolidityLexer.g4 @SolidityParser.g4 
+
+you need to generate rule at @rules/  folder and an test solidity file at @tests/  folder make sure the file name include bug code and name combbination   for referr @AccessControlActorsDetector.py 
+
+
+now we are going to do  @SCWE-001.md 
+
+refer this doc and provide rule to properrly detct this type of bug 
+
+and rule and testfilenamelooklike <ruleCode>_<bugname>
+
+here rulecode is like 001 
+
+
+and test solidity is not much big few line of code just i need to check is that rule detect it or not you can even put any code in that md file also for dettectable buggy code 
+
+
+and you not need to run i can run manually ok 
