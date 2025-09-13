@@ -19,3 +19,5 @@ and test solidity is not much big few line of code just i need to check is that 
 
 
 and you not need to run i can run manually ok 
+
+dont include any symbol like tick cancel
