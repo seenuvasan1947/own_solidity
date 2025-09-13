@@ -87,7 +87,6 @@ class UnusedVariablesDetector(SolidityParserListener):
                 var_name = var_decl.identifier().getText() if var_decl.identifier() else "unknown"
                 var_line = ctx.start.line
                 
-                print(f"Tuple variable: {var_name} in {self.current_function}")
                 
                 self.function_variables[self.current_function].append({
                     'name': var_name,
@@ -103,7 +102,6 @@ class UnusedVariablesDetector(SolidityParserListener):
         # Don't count variable declarations as usage
         if not self.declaring_variable:
             # Track variable usage
-            print(f"Using identifier: {var_name}")
             self.used_variables.add(var_name)
             if self.current_function:
                 self.function_used_vars.add(var_name)
