@@ -40,4 +40,4 @@ def parse_solidity_code(file_path):
                 print(f"[{rule.__class__.__name__}] {v}")
 
 # Run it
-parse_solidity_code("test\InsecureUpgradeableProxy.sol")
+parse_solidity_code("test/InconsistentInheritanceHierarchy.sol")
