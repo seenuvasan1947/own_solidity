@@ -43,6 +43,7 @@ class UnusedVariablesDetector(SolidityParserListener):
         if not self.current_contract:
             return
             
+        self.declaring_variable = True
         var_name = ctx.identifier().getText() if ctx.identifier() else "unknown"
         var_line = ctx.start.line
         
@@ -50,7 +51,6 @@ class UnusedVariablesDetector(SolidityParserListener):
         visibility = self._get_variable_visibility(ctx)
         is_public = visibility == 'public'
         
-        print(f"State variable: {var_name} in {self.current_contract} (public: {is_public})")
         
         self.declared_variables[self.current_contract].append({
             'name': var_name,
@@ -59,17 +59,21 @@ class UnusedVariablesDetector(SolidityParserListener):
             'visibility': visibility
         })
         
+    def exitStateVariableDeclaration(self, ctx):
+        self.declaring_variable = False
+        
     def enterVariableDeclarationStatement(self, ctx):
         if not self.current_function:
             return
             
+        self.declaring_variable = True
+        
         # Handle single variable declaration
         if ctx.variableDeclaration():
             var_decl = ctx.variableDeclaration()
             var_name = var_decl.identifier().getText() if var_decl.identifier() else "unknown"
             var_line = ctx.start.line
             
-            print(f"Local variable: {var_name} in {self.current_function}")
             
             self.function_variables[self.current_function].append({
                 'name': var_name,
@@ -90,14 +94,19 @@ class UnusedVariablesDetector(SolidityParserListener):
                     'line': var_line
                 })
                 
+    def exitVariableDeclarationStatement(self, ctx):
+        self.declaring_variable = False
+                
     def enterIdentifier(self, ctx):
         var_name = ctx.getText()
         
-        # Track variable usage
-        print(f"Using identifier: {var_name}")
-        self.used_variables.add(var_name)
-        if self.current_function:
-            self.function_used_vars.add(var_name)
+        # Don't count variable declarations as usage
+        if not self.declaring_variable:
+            # Track variable usage
+            print(f"Using identifier: {var_name}")
+            self.used_variables.add(var_name)
+            if self.current_function:
+                self.function_used_vars.add(var_name)
             
     def enterMemberAccess(self, ctx):
         # Handle member access like contract.variable
