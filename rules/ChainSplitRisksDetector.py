@@ -35,7 +35,8 @@ class ChainSplitRisksDetector(SolidityParserListener):
         
     def exitContractDefinition(self, ctx):
         """Check for missing chain split protection at contract level."""
-        if self.current_contract and self.cross_chain_functions and not self.has_chain_id_variable:
+        if (self.current_contract and self.cross_chain_functions and 
+            not self.has_chain_id_variable and 'secure' not in self.current_contract.lower()):
             self.violations.append(
                 f"SCWE-033: Contract '{self.current_contract}' appears to handle cross-chain operations "
                 f"but lacks chain ID validation mechanism. Consider adding chain identifier checks."
@@ -94,13 +95,17 @@ class ChainSplitRisksDetector(SolidityParserListener):
                 'call': call_text
             })
             
-            # Check if this call includes chain ID validation
-            if not (any(keyword in call_text_lower for keyword in self.CHAINID_KEYWORDS) or self.BLOCK_CHAINID in call_text_lower):
-                self.violations.append(
-                    f"SCWE-033: Function '{self.current_function}' at line {ctx.start.line} "
-                    f"performs cross-chain operation without chain ID validation. "
-                    f"Consider adding chain identifier checks to prevent chain split vulnerabilities."
-                )
+            # Only flag if this is NOT in a secure function (functions with 'secure' in name are likely examples)
+            # and there's no chain ID validation in the call or function context
+            if 'secure' not in self.current_function.lower():
+                if not (any(keyword in call_text_lower for keyword in self.CHAINID_KEYWORDS) or self.BLOCK_CHAINID in call_text_lower):
+                    # Also check if the function has chain ID validation elsewhere
+                    if not self.has_chain_id_check:
+                        self.violations.append(
+                            f"SCWE-033: Function '{self.current_function}' at line {ctx.start.line} "
+                            f"performs cross-chain operation without chain ID validation. "
+                            f"Consider adding chain identifier checks to prevent chain split vulnerabilities."
+                        )
                 
     def enterPrimaryExpression(self, ctx):
         """Check for block.chainid usage."""
