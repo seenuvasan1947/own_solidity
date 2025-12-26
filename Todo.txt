@@ -1,3 +1,13 @@
 first raed the entire project fully and understand what we try to do ok then analyse properlly if already existing rules have all are correct in all perspective 
 
 one important thng that is if that parser is able to parse and find bugs even more than 50000 lines in an same file because i see same antlr parser on an diff language have issue it cannot parse more line in a same file and makse sure for making and tesing rules you first properrly check grammer and decide what t ouse ok gramer also he here 
+
+
+
+26-12-2025
+
+@assembly 
+
+
+now we reach final part for each and evry rule in this folder we need to make an rule for us and use that existing folder structure but if you think noting is fit i need new catogory folder then create it but on ever rule at top mention S<uniquecode> 
+if you think is that face any issue in fp and consider to update and optimise do that also but make sure you not lead and true negative ok 
