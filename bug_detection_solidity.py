@@ -12,7 +12,7 @@ RULES_DIR = "rules"
 class SilentErrorListener(ErrorListener):
     """Silent error listener - suppresses all parsing warnings"""
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
-        pass  # Silently ignore
+        pass
     
     def reportAmbiguity(self, recognizer, dfa, startIndex, stopIndex, exact, ambigAlts, configs):
         pass
@@ -24,26 +24,41 @@ class SilentErrorListener(ErrorListener):
         pass
 
 def load_all_rule_classes(rules_dir):
-    """Load all detector rule classes silently"""
+    """
+    Load all detector rule classes from the rules directory.
+    Supports both flat structure and categorized subdirectories.
+    """
     rule_classes = []
     
-    for filename in sorted(os.listdir(rules_dir)):
-        if filename.endswith(".py") and not filename.startswith("__"):
-            filepath = os.path.join(rules_dir, filename)
-            module_name = filename[:-3]
-            class_name = module_name
+    def load_from_directory(directory):
+        """Recursively load rules from a directory"""
+        if not os.path.exists(directory):
+            return
+        
+        for item in sorted(os.listdir(directory)):
+            item_path = os.path.join(directory, item)
             
-            try:
-                spec = importlib.util.spec_from_file_location(class_name, filepath)
-                mod = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(mod)
+            # If it's a directory, recurse into it (skip __pycache__)
+            if os.path.isdir(item_path) and not item.startswith('__'):
+                load_from_directory(item_path)
+            
+            # If it's a Python file, try to load it
+            elif item.endswith(".py") and not item.startswith("__"):
+                module_name = item[:-3]
+                class_name = module_name
                 
-                rule_class = getattr(mod, class_name)
-                rule_instance = rule_class()
-                rule_classes.append(rule_instance)
-            except:
-                pass  # Silently skip failed rules
+                try:
+                    spec = importlib.util.spec_from_file_location(class_name, item_path)
+                    mod = importlib.util.module_from_spec(spec)
+                    spec.loader.exec_module(mod)
+                    
+                    rule_class = getattr(mod, class_name)
+                    rule_instance = rule_class()
+                    rule_classes.append(rule_instance)
+                except:
+                    pass  # Silently skip failed rules
     
+    load_from_directory(rules_dir)
     return rule_classes
 
 def parse_solidity_code(file_path):
@@ -87,7 +102,7 @@ def parse_solidity_code(file_path):
             parser._interp.predictionMode = PredictionMode.LL
             tree = parser.sourceUnit()
         
-        # Load detector rules
+        # Load detector rules (supports categorized structure)
         rule_instances = load_all_rule_classes(RULES_DIR)
         
         if not rule_instances:
@@ -122,4 +137,3 @@ if __name__ == "__main__":
         file_path = default_file
     
     parse_solidity_code(file_path)
-

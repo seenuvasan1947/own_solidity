@@ -55,5 +55,7 @@ src/utils/scroll_api_tracker.json
 src/utils/scroll_api_tracker_api_endpoint.json
 
 sonar-venv/
-__pycache__
-rules\__pycache__
+__pycache__/
+__pycache__\but code not moved still 
+rules\__pycache__\
+slither/
