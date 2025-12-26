@@ -11,7 +11,7 @@ class UninitializedStateVariableDetector(SolidityParserListener):
         self.state_variables = {}  # {name: initialized}
 
     def enterContractDefinition(self, ctx):
-        self.current_contract = ctx.name.text
+        self.current_contract = ctx.identifier().getText() if ctx.identifier() else "unknown"
         self.constructor_variables.clear()
         self.state_variables.clear()
 
@@ -25,7 +25,7 @@ class UninitializedStateVariableDetector(SolidityParserListener):
 
     def enterStateVariableDeclaration(self, ctx):
         # Get variable name and check if it has an initial value
-        var_name = ctx.name.text
+        var_name = ctx.name.getText()
         has_initial_value = ctx.initialValue is not None
         
         # Check if variable is constant or immutable

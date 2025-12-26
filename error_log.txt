@@ -1,0 +1,105 @@
+﻿[AccessControlActorsDetector] Γ¥î Unclear actor access control in function 'dangerous' of contract 'Test' at line 4: No explicit access control check found.
+[AccessControlActorsDetector] Γ¥î Unclear actor access control in function 'safe' of contract 'Test' at line 9: No explicit access control check found.
+[AccessControlActorsDetector] Γ¥î Unclear actor access control in function 'destroyIt' of contract 'UnsafeContract' at line 19: No explicit access control check found.
+[AccessControlDetector] Γ¥î [Line 4] Function `dangerous` lacks access control (public/external with no modifiers).
+[AccessControlDetector] Γ¥î [Line 9] Function `safe` lacks access control (public/external with no modifiers).
+[AccessControlDetector] Γ¥î [Line 15] Function `kill` lacks access control (public/external with no modifiers).
+[AccessControlDetector] Γ¥î [Line 19] Function `destroyIt` lacks access control (public/external with no modifiers).
+[DEBUG] Line 5: address(this).call{value:1ether}("");
+[DEBUG] Line 6: address(this).delegatecall(abi.encodewithsignature("dosomething()"));
+[DEBUG] Line 10: payable(address(this)).transfer(1ether);
+[DEBUG] Line 16: selfdestruct(payable(msg.sender));
+[DEBUG] Line 20: selfdestruct(payable(tx.origin));
+[CommitRevealDetector] Γ¥î Possible Front-running vulnerability at line 4: The protocol might not implement a properly user-bound commit-reveal scheme.
+[CommitRevealDetector] Γ¥î Possible Front-running vulnerability at line 9: The protocol might not implement a properly user-bound commit-reveal scheme.
+[CommitRevealDetector] Γ¥î Possible Front-running vulnerability at line 15: The protocol might not implement a properly user-bound commit-reveal scheme.
+[CommitRevealDetector] Γ¥î Possible Front-running vulnerability at line 19: The protocol might not implement a properly user-bound commit-reveal scheme.
+[FrontRunningDetector] Γ¥î [SOL-Basics-Function-3] Potential front-running vulnerability in function 'dangerous' of contract 'Test' at line 4: Function modifies state without protection mechanisms.
+[FrontRunningDetector] Γ¥î [SOL-Basics-Function-3] Potential front-running vulnerability in function 'safe' of contract 'Test' at line 9: Function modifies state without protection mechanisms.
+Function found: dangerous at line 4
+Function found: safe at line 9
+Function found: kill at line 15
+Function found: destroyIt at line 19
+Function dangerous has params: set(), has body: True
+Function safe has params: set(), has body: True
+Function kill has params: set(), has body: True
+Function destroyIt has params: set(), has body: True
+[SelfDestructDetector] Γ¥î Unsafe selfdestruct() at line 16: selfdestruct(payable(msg.sender))
+[SelfDestructDetector] Γ¥î Unsafe selfdestruct() at line 20: selfdestruct(payable(tx.origin))
+python : Traceback (most 
+recent call last):
+At line:1 char:32
++ ... 
+THONIOENCODING='utf-8'; 
+python 
+bug_detection_solidity.py 
+2>&1 | Out-F ...
++                            
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (Traceba  
+  ck (most recent call las   
+ t)::String) [], RemoteEx    
+ception
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+  File "C:\Users\Finstein-Adm
+in\Documents\cyber_product\ow
+n\own_solidity\bug_detection_
+solidity.py", line 43, in 
+<module>
+    parse_solidity_code("test
+/MyContract.sol")
+  File "C:\Users\Finstein-Adm
+in\Documents\cyber_product\ow
+n\own_solidity\bug_detection_
+solidity.py", line 37, in 
+parse_solidity_code
+    walker.walk(rule, tree)
+  File "C:\Users\Finstein-Adm
+in\AppData\Local\Packages\Pyt
+honSoftwareFoundation.Python.
+3.12_qbz5n2kfra8p0\LocalCache
+\local-packages\Python312\sit
+e-packages\antlr4\tree\Tree.p
+y", line 160, in walk
+    self.walk(listener, 
+child)
+  File "C:\Users\Finstein-Adm
+in\AppData\Local\Packages\Pyt
+honSoftwareFoundation.Python.
+3.12_qbz5n2kfra8p0\LocalCache
+\local-packages\Python312\sit
+e-packages\antlr4\tree\Tree.p
+y", line 158, in walk
+    self.enterRule(listener, 
+t)
+  File "C:\Users\Finstein-Adm
+in\AppData\Local\Packages\Pyt
+honSoftwareFoundation.Python.
+3.12_qbz5n2kfra8p0\LocalCache
+\local-packages\Python312\sit
+e-packages\antlr4\tree\Tree.p
+y", line 178, in enterRule
+    ctx.enterRule(listener)
+  File "C:\Users\Finstein-Adm
+in\Documents\cyber_product\ow
+n\own_solidity\SolidityParser
+.py", line 1503, in enterRule
+    listener.enterContractDef
+inition(self)
+  File "C:\Users\Finstein-Adm
+in\Documents\cyber_product\ow
+n\own_solidity\rules\Uninitia
+lizedStateVariableDetector.py
+", line 14, in 
+enterContractDefinition
+    self.current_contract = 
+ctx.name.text
+                            
+^^^^^^^^^^^^^
+AttributeError: 
+'IdentifierContext' object 
+has no attribute 'text'

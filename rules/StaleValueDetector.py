@@ -16,7 +16,7 @@ class StaleValueDetector(SolidityParserListener):
         self.external_calls = []
 
     def enterStateVariableDeclaration(self, ctx):
-        name = ctx.name.text
+        name = ctx.name.getText()
         self.state_variables.add(name)
 
     def enterFunctionDefinition(self, ctx):
