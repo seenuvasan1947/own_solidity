@@ -11,3 +11,5 @@ one important thng that is if that parser is able to parse and find bugs even mo
 
 now we reach final part for each and evry rule in this folder we need to make an rule for us and use that existing folder structure but if you think noting is fit i need new catogory folder then create it but on ever rule at top mention S<uniquecode> 
 if you think is that face any issue in fp and consider to update and optimise do that also but make sure you not lead and true negative ok 
+
+if you thing to be fine tune do that othersie use it but make sure fp avoid and true negative is not occur 
