@@ -169,24 +169,26 @@ This document tracks the implementation of Slither detector rules adapted for ou
 |------|-----------|--------|----------|------|
 | S-AC-001 | Arbitrary Send Ether | ✅ Implemented | CRITICAL | ArbitrarySendEthDetector.py |
 
-### Function Rules (4 rules)
+### Function Rules (5 rules)
 | Code | Rule Name | Status | Priority | File |
 |------|-----------|--------|----------|------|
 | S-FNC-001 | Incorrect Modifier | ✅ Implemented | MEDIUM-HIGH | IncorrectModifierDetector.py |
 | S-FNC-002 | Dead Code Detection | ✅ Implemented | INFO | DeadCodeDetector.py |
 | S-FNC-003 | Unimplemented Functions | ✅ Implemented | MEDIUM | UnimplementedFunctionDetector.py |
 | S-FNC-004 | Protected Variables | ✅ Implemented | CRITICAL | ProtectedVariablesDetector.py |
+| S-FNC-005 | Suicidal Function | ✅ Implemented | CRITICAL | SuicidalFunctionDetector.py |
 
 ### Validation Rules (1 rule)
 | Code | Rule Name | Status | Priority | File |
 |------|-----------|--------|----------|------|
 | S-VAL-001 | Missing Zero Address Check | ✅ Implemented | HIGH | MissingZeroAddressDetector.py |
 
-### Code Quality Rules (2 rules)
+### Code Quality Rules (3 rules)
 | Code | Rule Name | Status | Priority | File |
 |------|-----------|--------|----------|------|
 | S-CQ-001 | Divide Before Multiply | ✅ Implemented | MEDIUM | DivideBeforeMultiplyDetector.py |
 | S-CQ-002 | Cyclomatic Complexity | ✅ Implemented | INFO | CyclomaticComplexityDetector.py |
+| S-CQ-003 | Naming Convention | ✅ Implemented | INFO | NamingConventionDetector.py |
 
 ### Optimization Rules (1 rule)
 | Code | Rule Name | Status | Priority | File |
@@ -205,21 +207,22 @@ This document tracks the implementation of Slither detector rules adapted for ou
 | S-DEFI-002 | Chainlink Feed Registry | ✅ Implemented | INFO | ChainlinkFeedRegistryDetector.py |
 | S-DEFI-003 | Pyth Deprecated Functions | ✅ Implemented | MEDIUM | PythDeprecatedFunctionsDetector.py |
 
-### L2 Rules (1 rule)
+### L2 Rules (2 rules)
 | Code | Rule Name | Status | Priority | File |
 |------|-----------|--------|----------|------|
 | S-L2-001 | Optimism Deprecation | ✅ Implemented | MEDIUM | OptimismDeprecationDetector.py |
+| S-L2-002 | Out-of-Order Retryable | ✅ Implemented | MEDIUM | OutOfOrderRetryableDetector.py |
 
 ## Total Progress
-- **Implemented**: 23/100+ rules (23%)
+- **Implemented**: 26/100+ rules (26%)
 - **Assembly**: 2 rules ✅
 - **Security**: 6 rules ✅
 - **Access Control**: 1 rule ✅
-- **Functions**: 4 rules ✅
+- **Functions**: 5 rules ✅
 - **Validation**: 1 rule ✅
-- **Code Quality**: 2 rules ✅
+- **Code Quality**: 3 rules ✅
 - **Optimization**: 1 rule ✅
 - **ERC**: 1 rule ✅
 - **DeFi**: 3 rules ✅
-- **L2**: 1 rule ✅
-- **Total Lines of Code**: ~3,200 lines
+- **L2**: 2 rules ✅
+- **Total Lines of Code**: ~4,100 lines
