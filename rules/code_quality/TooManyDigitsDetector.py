@@ -1,6 +1,6 @@
-# S-SEC-030: tx.origin Usage
-# Detects tx.origin used for authorization
-# Can be bypassed via phishing attacks
+# S-CODE-029: Too Many Digits
+# Detects numeric literals with too many digits
+# Hard to read and prone to errors
 
 from antlr4 import *
 from SolidityLexer import SolidityLexer
@@ -8,7 +8,7 @@ from SolidityParser import SolidityParser
 from SolidityParserListener import SolidityParserListener
 import re
 
-class TxOriginDetector(SolidityParserListener):
+class TooManyDigitsDetector(SolidityParserListener):
     
     def __init__(self):
         self.violations = []
@@ -37,20 +37,20 @@ class TxOriginDetector(SolidityParserListener):
         stmt_text = ctx.getText()
         line = ctx.start.line
         
-        # Detect tx.origin in conditionals (require, assert, if)
-        if 'tx.origin' in stmt_text:
-            # Check if it's in a conditional context
-            is_conditional = any(keyword in stmt_text for keyword in ['require', 'assert', 'if'])
-            
-            if is_conditional:
-                # Avoid FP: skip if comparing tx.origin == msg.sender (legitimate use)
-                if not re.search(r'tx\.origin\s*==\s*msg\.sender|msg\.sender\s*==\s*tx\.origin', stmt_text):
+        # Find numeric literals with 5+ consecutive zeros
+        # Exclude hex addresses (0x followed by 40 hex chars)
+        numbers = re.findall(r'\b\d+\b', stmt_text)
+        
+        for num in numbers:
+            if '00000' in num:
+                # Avoid FP: skip if it's part of a hex address
+                if not re.search(r'0x[0-9a-fA-F]{40}', stmt_text):
                     self.violations.append(
-                        f"⚠️  [S-SEC-030] MEDIUM: Dangerous tx.origin usage in function '{self.function_name}' of contract '{self.current_contract}' at line {line}: "
-                        f"tx.origin used for authorization. "
-                        f"Attacker can bypass via phishing (malicious contract calling your contract). "
-                        f"Use msg.sender instead."
+                        f"ℹ️  [S-CODE-029] INFO: Too many digits in function '{self.function_name}' of contract '{self.current_contract}' at line {line}: "
+                        f"Literal '{num}' has many consecutive zeros. "
+                        f"Use ether/wei suffixes (1 ether, 1e18) or scientific notation for readability."
                     )
+                    break
 
     def get_violations(self):
         return self.violations
