@@ -152,7 +152,74 @@ This document tracks the implementation of Slither detector rules adapted for ou
 3. Refine detection logic to reduce false positives
 4. Document each rule with examples
 
+## Recently Implemented (From Examples & Reference)
+
+### Security Rules (6 rules)
+| Code | Rule Name | Status | Priority | File |
+|------|-----------|--------|----------|------|
+| S-SEC-008 | Backdoor Function Detection | ✅ Implemented | CRITICAL | BackdoorDetector.py |
+| S-SEC-009 | Weak PRNG Detection | ✅ Implemented | HIGH | WeakPRNGDetector.py |
+| S-SEC-010 | Reentrancy Vulnerability | ✅ Implemented | CRITICAL | ReentrancyDetector.py |
+| S-SEC-011 | Dangerous tx.origin Usage | ✅ Implemented | MEDIUM-HIGH | TxOriginDetector.py |
+| S-SEC-012 | Unchecked Low-Level Calls | ✅ Implemented | CRITICAL | UncheckedLowLevelCallDetector.py |
+| S-SEC-013 | ABI encodePacked Collision | ✅ Implemented | CRITICAL | EncodePackedCollisionDetector.py |
+
+### Access Control Rules (1 rule)
+| Code | Rule Name | Status | Priority | File |
+|------|-----------|--------|----------|------|
+| S-AC-001 | Arbitrary Send Ether | ✅ Implemented | CRITICAL | ArbitrarySendEthDetector.py |
+
+### Function Rules (4 rules)
+| Code | Rule Name | Status | Priority | File |
+|------|-----------|--------|----------|------|
+| S-FNC-001 | Incorrect Modifier | ✅ Implemented | MEDIUM-HIGH | IncorrectModifierDetector.py |
+| S-FNC-002 | Dead Code Detection | ✅ Implemented | INFO | DeadCodeDetector.py |
+| S-FNC-003 | Unimplemented Functions | ✅ Implemented | MEDIUM | UnimplementedFunctionDetector.py |
+| S-FNC-004 | Protected Variables | ✅ Implemented | CRITICAL | ProtectedVariablesDetector.py |
+
+### Validation Rules (1 rule)
+| Code | Rule Name | Status | Priority | File |
+|------|-----------|--------|----------|------|
+| S-VAL-001 | Missing Zero Address Check | ✅ Implemented | HIGH | MissingZeroAddressDetector.py |
+
+### Code Quality Rules (2 rules)
+| Code | Rule Name | Status | Priority | File |
+|------|-----------|--------|----------|------|
+| S-CQ-001 | Divide Before Multiply | ✅ Implemented | MEDIUM | DivideBeforeMultiplyDetector.py |
+| S-CQ-002 | Cyclomatic Complexity | ✅ Implemented | INFO | CyclomaticComplexityDetector.py |
+
+### Optimization Rules (1 rule)
+| Code | Rule Name | Status | Priority | File |
+|------|-----------|--------|----------|------|
+| S-OPT-001 | Public to External | ✅ Implemented | OPTIMIZATION | PublicToExternalDetector.py |
+
+### ERC Rules (1 rule)
+| Code | Rule Name | Status | Priority | File |
+|------|-----------|--------|----------|------|
+| S-ERC-004 | Domain Separator Collision | ✅ Implemented | CRITICAL | DomainSeparatorCollisionDetector.py |
+
+### DeFi Rules (3 rules)
+| Code | Rule Name | Status | Priority | File |
+|------|-----------|--------|----------|------|
+| S-DEFI-001 | Gelato Unprotected Randomness | ✅ Implemented | MEDIUM | GelatoUnprotectedRandomnessDetector.py |
+| S-DEFI-002 | Chainlink Feed Registry | ✅ Implemented | INFO | ChainlinkFeedRegistryDetector.py |
+| S-DEFI-003 | Pyth Deprecated Functions | ✅ Implemented | MEDIUM | PythDeprecatedFunctionsDetector.py |
+
+### L2 Rules (1 rule)
+| Code | Rule Name | Status | Priority | File |
+|------|-----------|--------|----------|------|
+| S-L2-001 | Optimism Deprecation | ✅ Implemented | MEDIUM | OptimismDeprecationDetector.py |
+
 ## Total Progress
-- **Implemented**: 2/100+ rules (2%)
-- **In Progress**: Assembly category
-- **Next**: High-priority security rules (reentrancy, access control, etc.)
+- **Implemented**: 23/100+ rules (23%)
+- **Assembly**: 2 rules ✅
+- **Security**: 6 rules ✅
+- **Access Control**: 1 rule ✅
+- **Functions**: 4 rules ✅
+- **Validation**: 1 rule ✅
+- **Code Quality**: 2 rules ✅
+- **Optimization**: 1 rule ✅
+- **ERC**: 1 rule ✅
+- **DeFi**: 3 rules ✅
+- **L2**: 1 rule ✅
+- **Total Lines of Code**: ~3,200 lines
