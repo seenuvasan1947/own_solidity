@@ -1,0 +1,322 @@
+Metadata-Version: 2.4
+Name: solscan
+Version: 1.0.0
+Summary: A comprehensive Solidity source code security scanner
+Home-page: https://github.com/yourusername/solscan
+Author: Your Name
+Author-email: your.email@example.com
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Quality Assurance
+Classifier: Topic :: Security
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: antlr4-python3-runtime>=4.9.0
+Requires-Dist: openpyxl>=3.0.0
+Requires-Dist: colorama>=0.4.0
+Requires-Dist: tqdm>=4.60.0
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# SolScan - Comprehensive Solidity Security Scanner
+
+A powerful, extensible static analysis tool for detecting security vulnerabilities and code quality issues in Solidity smart contracts.
+
+## Features
+
+- 🔍 **Comprehensive Detection**: 100+ built-in security rules covering:
+  - Access Control vulnerabilities
+  - Reentrancy attacks
+  - Integer overflow/underflow
+  - Gas optimization issues
+  - Code quality problems
+  - ERC standard compliance
+  - And much more!
+
+- 📁 **Recursive Scanning**: Scan entire project directories with any level of subdirectories
+- 📊 **Multiple Output Formats**: Generate reports in JSON or Excel format
+- 🎨 **Color-coded Results**: Easy-to-read terminal output with severity-based coloring
+- ⚡ **Fast & Efficient**: Parallel processing for large codebases
+- 🔧 **Flexible Filtering**: Filter by severity, category, or file patterns
+- 📈 **Detailed Reports**: Get comprehensive statistics and insights
+
+## Installation
+
+### From PyPI (Recommended)
+
+```bash
+pip install solscan
+```
+
+### From Source
+
+```bash
+git clone https://github.com/yourusername/solscan.git
+cd solscan
+pip install -e .
+```
+
+## Quick Start
+
+### Scan a single file
+
+```bash
+solscan -i contract.sol
+```
+
+### Scan a directory recursively
+
+```bash
+solscan -i ./contracts -r
+```
+
+### Generate JSON report
+
+```bash
+solscan -i ./contracts -r -o results.json -f json
+```
+
+### Generate Excel report
+
+```bash
+solscan -i ./contracts -r -o results.xlsx -f excel
+```
+
+### Generate both formats
+
+```bash
+solscan -i ./contracts -r -o results -f both
+```
+
+## Usage
+
+```
+usage: solscan [-h] -i INPUT [-o OUTPUT] [-f {json,excel,both}] [-r]
+               [--severity {low,medium,high,critical} [{low,medium,high,critical} ...]]
+               [--categories CATEGORIES [CATEGORIES ...]]
+               [--exclude EXCLUDE [EXCLUDE ...]] [-v] [--version]
+               [--no-color] [--list-rules]
+
+Comprehensive Solidity Security Scanner
+
+Required Arguments:
+  -i, --input INPUT     Input file or directory path to scan
+
+Optional Arguments:
+  -o, --output OUTPUT   Output file path (default: solscan_results_<timestamp>.json)
+  -f, --format {json,excel,both}
+                        Output format (default: json)
+  -r, --recursive       Recursively scan subdirectories (default: False)
+  --severity {low,medium,high,critical} [{low,medium,high,critical} ...]
+                        Filter by severity levels (default: all)
+  --categories CATEGORIES [CATEGORIES ...]
+                        Filter by specific categories
+  --exclude EXCLUDE [EXCLUDE ...]
+                        Exclude specific file patterns
+  -v, --verbose         Enable verbose output
+  --version             Show program's version number and exit
+  --no-color            Disable colored output
+  --list-rules          List all available detection rules and exit
+```
+
+## Examples
+
+### Filter by Severity
+
+Scan only for critical and high severity issues:
+
+```bash
+solscan -i ./contracts -r --severity critical high
+```
+
+### Filter by Category
+
+Scan only for access control and reentrancy issues:
+
+```bash
+solscan -i ./contracts -r --categories access_control reentrancy
+```
+
+### Exclude Test Files
+
+Scan all files except test contracts:
+
+```bash
+solscan -i ./contracts -r --exclude "*test*.sol" "*mock*.sol"
+```
+
+### Verbose Output
+
+Get detailed information about the scanning process:
+
+```bash
+solscan -i ./contracts -r -v
+```
+
+### List All Rules
+
+See all available detection rules:
+
+```bash
+solscan --list-rules
+```
+
+## Output Formats
+
+### JSON Output
+
+The JSON report includes:
+- Scan metadata (timestamp, file count, etc.)
+- Detailed findings for each file
+- Summary statistics by severity and category
+
+Example structure:
+```json
+{
+  "scan_info": {
+    "timestamp": "2025-12-27T21:40:00",
+    "total_files": 10,
+    "total_bugs": 25
+  },
+  "results": [
+    {
+      "file": "contracts/Token.sol",
+      "bugs_count": 3,
+      "bugs": [
+        {
+          "rule": "ReentrancyDetector",
+          "category": "reentrancy",
+          "severity": "critical",
+          "description": "Potential reentrancy vulnerability",
+          "violation": "❌ Reentrancy at line 45: transfer()"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "by_severity": {
+      "critical": 5,
+      "high": 10,
+      "medium": 8,
+      "low": 2
+    }
+  }
+}
+```
+
+### Excel Output
+
+The Excel report contains multiple sheets:
+- **Summary**: Overall statistics and severity breakdown
+- **All Issues**: Detailed list of all findings
+- **By File**: Issues grouped by file
+- **By Category**: Issues grouped by category
+
+All sheets include color-coded severity levels and are filterable.
+
+## Detection Categories
+
+SolScan includes rules in the following categories:
+
+- **Access Control**: Unauthorized access, privilege escalation
+- **Reentrancy**: Reentrancy attacks and state manipulation
+- **Arithmetic**: Integer overflow/underflow, division issues
+- **Gas Optimization**: Expensive operations, inefficient patterns
+- **Code Quality**: Naming conventions, dead code, complexity
+- **ERC Standards**: ERC20, ERC721 compliance issues
+- **Assembly**: Low-level assembly issues
+- **Compiler Bugs**: Known Solidity compiler issues
+- **And more...**
+
+## Severity Levels
+
+- **Critical**: Immediate security risk, potential for fund loss
+- **High**: Serious security issue, should be fixed urgently
+- **Medium**: Moderate security concern or code quality issue
+- **Low**: Minor issue or best practice violation
+
+## Development
+
+### Project Structure
+
+```
+solscan/
+├── solscan/
+│   ├── __init__.py
+│   ├── cli.py          # Command-line interface
+│   ├── scanner.py      # Core scanning logic
+│   └── reporter.py     # Report generation
+├── rules/              # Detection rules organized by category
+│   ├── access_control/
+│   ├── reentrancy/
+│   ├── arithmetic/
+│   └── ...
+├── tests/              # Unit tests
+├── setup.py
+└── README.md
+```
+
+### Adding Custom Rules
+
+To add a custom detection rule:
+
+1. Create a new Python file in the appropriate category under `rules/`
+2. Implement a class that inherits from `SolidityParserListener`
+3. Add detection logic using ANTLR parser callbacks
+4. Implement `get_violations()` method to return findings
+
+Example:
+
+```python
+from antlr4 import *
+from SolidityParserListener import SolidityParserListener
+
+class MyCustomDetector(SolidityParserListener):
+    SEVERITY = "high"
+    DESCRIPTION = "Detects my custom vulnerability"
+    
+    def __init__(self):
+        self.violations = []
+    
+    def enterFunctionDefinition(self, ctx):
+        # Your detection logic here
+        pass
+    
+    def get_violations(self):
+        return self.violations
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For issues, questions, or contributions, please visit:
+https://github.com/yourusername/solscan
+
+## Acknowledgments
+
+Built with:
+- ANTLR4 for Solidity parsing
+- OpenPyXL for Excel generation
+- Colorama for terminal colors

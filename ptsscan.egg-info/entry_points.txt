@@ -1,0 +1,2 @@
+[console_scripts]
+ptsscan = ptsscan.cli:main

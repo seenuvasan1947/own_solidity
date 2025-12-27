@@ -1,0 +1,9 @@
+# PTSScan Package Configuration
+include README.md
+include LICENSE
+include requirements.txt
+recursive-include ptsscan *.py
+recursive-include rules *.py
+include *.g4
+include *.tokens
+include *.interp

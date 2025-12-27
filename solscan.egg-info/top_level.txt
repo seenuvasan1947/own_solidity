@@ -1,0 +1,5 @@
+rules
+slither
+slither_rules_reference
+solscan
+tests
