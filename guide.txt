@@ -1,19 +1,73 @@
-# Basic scan
+# PTSScan Quick Guide
+
+## Basic Commands
+
+# Scan a single file
 ptsscan -i contract.sol
 
 # Recursive directory scan
 ptsscan -i ./contracts -r
 
-# Generate reports
+## Generate Reports (Now with Line Numbers & Code Snippets!)
+
+# JSON report (includes line_number and code_snippet for each bug)
 ptsscan -i ./contracts -r -o results.json
+
+# Excel report (includes Line and Code Snippet columns)
 ptsscan -i ./contracts -r -o results.xlsx -f excel
+
+# Both formats
 ptsscan -i ./contracts -r -o results -f both
 
-# Filter and exclude
+## Filter and Exclude
+
+# Filter by severity
 ptsscan -i ./contracts -r --severity critical high
+
+# Filter by category
 ptsscan -i ./contracts -r --categories access_control reentrancy
+
+# Exclude test files
 ptsscan -i ./contracts -r --exclude "*test*.sol"
 
-# Utilities
+## Utilities
+
+# List all available rules
 ptsscan --list-rules
+
+# Show help
 ptsscan --help
+
+# Show version
+ptsscan --version
+
+## New Features ✨
+
+### Automatic Line Number Extraction
+- PTSScan now automatically extracts line numbers from violation messages
+- No need to modify any rules!
+
+### Code Snippets
+- Shows 2 lines before and after the problematic line
+- Marks the exact line with >>> 
+- Example:
+       1 | // Bad: No access control
+       2 | contract BadContract {
+  >>>  3 |     function withdrawAll() public {
+       4 |         // dangerous
+       5 |     }
+
+### Enhanced Reports
+- JSON: Includes "line_number" and "code_snippet" fields
+- Excel: New "Line" and "Code Snippet" columns
+- Professional output matching industry tools
+
+## Tips
+
+1. Use `-r` for recursive scanning
+2. Use `--severity critical high` to focus on important issues
+3. Use `-v` for detailed output during scanning
+4. Use `--exclude` to skip test files
+5. Use `-f both` to get both JSON and Excel reports
+6. Check the "Line" column in Excel for quick navigation
+7. Review "Code Snippet" column to understand context

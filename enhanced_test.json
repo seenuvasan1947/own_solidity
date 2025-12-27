@@ -1,0 +1,171 @@
+{
+  "scan_info": {
+    "timestamp": "2025-12-27T23:04:18.440296",
+    "total_files": 1,
+    "total_bugs": 15
+  },
+  "results": [
+    {
+      "file": "C:\\Users\\Finstein-Admin\\Documents\\cyber_product\\own\\own_solidity\\test_contracts\\AccessControlDetector_bad.sol",
+      "bugs_count": 15,
+      "rules_applied": 124,
+      "bugs": [
+        {
+          "rule": "AccessControlActorsDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Unclear actor access control in function 'withdrawAll' of contract 'BadContract' at line 3: No explicit access control check found.",
+          "line_number": 3,
+          "code_snippet": "       1 | // Bad: No access control\n       2 | contract BadContract {\n>>>    3 |     function withdrawAll() public {\n       4 |         // dangerous\n       5 |     }"
+        },
+        {
+          "rule": "AccessControlActorsDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Unclear actor access control in function 'updateOwner' of contract 'BadContract' at line 7: No explicit access control check found.",
+          "line_number": 7,
+          "code_snippet": "       5 |     }\n       6 | \n>>>    7 |     function updateOwner(address newOwner) external {\n       8 |         // anyone can call this\n       9 |     }"
+        },
+        {
+          "rule": "AccessControlDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [Line 3] Function `withdrawAll` lacks access control (public/external with no modifiers).",
+          "line_number": 3,
+          "code_snippet": "       1 | // Bad: No access control\n       2 | contract BadContract {\n>>>    3 |     function withdrawAll() public {\n       4 |         // dangerous\n       5 |     }"
+        },
+        {
+          "rule": "AccessControlDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [Line 7] Function `updateOwner` lacks access control (public/external with no modifiers).",
+          "line_number": 7,
+          "code_snippet": "       5 |     }\n       6 | \n>>>    7 |     function updateOwner(address newOwner) external {\n       8 |         // anyone can call this\n       9 |     }"
+        },
+        {
+          "rule": "VisibilityStrictnessDetector",
+          "category": "code_quality",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [SOL-Basics-Function-7] Function 'withdrawAll' of contract 'BadContract' at line 3 is 'public' but is only called internally. Consider making it 'internal' or 'private'.",
+          "line_number": 3,
+          "code_snippet": "       1 | // Bad: No access control\n       2 | contract BadContract {\n>>>    3 |     function withdrawAll() public {\n       4 |         // dangerous\n       5 |     }"
+        },
+        {
+          "rule": "VisibilityStrictnessDetector",
+          "category": "code_quality",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [SOL-Basics-Function-7] Function 'updateOwner' of contract 'BadContract' at line 7 is 'external' but is only called internally. Consider making it 'internal' or 'private'.",
+          "line_number": 7,
+          "code_snippet": "       5 |     }\n       6 | \n>>>    7 |     function updateOwner(address newOwner) external {\n       8 |         // anyone can call this\n       9 |     }"
+        },
+        {
+          "rule": "UnimplementedFunctionDetector",
+          "category": "functions",
+          "severity": "medium",
+          "description": "Detects functions that are declared but not implemented.",
+          "violation": "⚠️  [S-FNC-003] WARNING: Unimplemented function in contract 'BadContract' at line 3: Function 'withdrawAll' is declared but not implemented. Either implement the function or mark the contract as abstract.",
+          "line_number": 3,
+          "code_snippet": "       1 | // Bad: No access control\n       2 | contract BadContract {\n>>>    3 |     function withdrawAll() public {\n       4 |         // dangerous\n       5 |     }"
+        },
+        {
+          "rule": "UnimplementedFunctionDetector",
+          "category": "functions",
+          "severity": "medium",
+          "description": "Detects functions that are declared but not implemented.",
+          "violation": "⚠️  [S-FNC-003] WARNING: Unimplemented function in contract 'BadContract' at line 7: Function 'updateOwner' is declared but not implemented. Either implement the function or mark the contract as abstract.",
+          "line_number": 7,
+          "code_snippet": "       5 |     }\n       6 | \n>>>    7 |     function updateOwner(address newOwner) external {\n       8 |         // anyone can call this\n       9 |     }"
+        },
+        {
+          "rule": "PublicToExternalDetector",
+          "category": "optimization",
+          "severity": "medium",
+          "description": "Detects public functions that could be declared external.",
+          "violation": "⚠️  [S-OPT-001] OPTIMIZATION: Function 'withdrawAll' in contract 'BadContract' at line 3: Public function is never called internally and should be declared external for gas optimization.",
+          "line_number": 3,
+          "code_snippet": "       1 | // Bad: No access control\n       2 | contract BadContract {\n>>>    3 |     function withdrawAll() public {\n       4 |         // dangerous\n       5 |     }"
+        },
+        {
+          "rule": "BackdoorDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "Detects functions with suspicious names that may indicate backdoor functionality.",
+          "violation": "⚠️  [S-SEC-008] WARNING: Potentially hidden admin function in contract 'BadContract' at line 3: Function 'withdrawAll' appears to have administrative capabilities but uses a non-standard name.",
+          "line_number": 3,
+          "code_snippet": "       1 | // Bad: No access control\n       2 | contract BadContract {\n>>>    3 |     function withdrawAll() public {\n       4 |         // dangerous\n       5 |     }"
+        },
+        {
+          "rule": "BackdoorDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "Detects functions with suspicious names that may indicate backdoor functionality.",
+          "violation": "⚠️  [S-SEC-008] WARNING: Potentially hidden admin function in contract 'BadContract' at line 7: Function 'updateOwner' appears to have administrative capabilities but uses a non-standard name.",
+          "line_number": 7,
+          "code_snippet": "       5 |     }\n       6 | \n>>>    7 |     function updateOwner(address newOwner) external {\n       8 |         // anyone can call this\n       9 |     }"
+        },
+        {
+          "rule": "CommitRevealDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Possible Front-running vulnerability at line 3: The protocol might not implement a properly user-bound commit-reveal scheme.",
+          "line_number": 3,
+          "code_snippet": "       1 | // Bad: No access control\n       2 | contract BadContract {\n>>>    3 |     function withdrawAll() public {\n       4 |         // dangerous\n       5 |     }"
+        },
+        {
+          "rule": "CommitRevealDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Possible Front-running vulnerability at line 7: The protocol might not implement a properly user-bound commit-reveal scheme.",
+          "line_number": 7,
+          "code_snippet": "       5 |     }\n       6 | \n>>>    7 |     function updateOwner(address newOwner) external {\n       8 |         // anyone can call this\n       9 |     }"
+        },
+        {
+          "rule": "EdgeCaseInputDetector",
+          "category": "validation",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [SOL-Basics-Function-5] Missing edge case validation in function 'updateOwner' of contract 'BadContract' at line 7: Parameters [newOwner] lack validation for edge cases (0, max values).",
+          "line_number": 7,
+          "code_snippet": "       5 |     }\n       6 | \n>>>    7 |     function updateOwner(address newOwner) external {\n       8 |         // anyone can call this\n       9 |     }"
+        },
+        {
+          "rule": "InputsValidationDetector",
+          "category": "validation",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Missing input validation in function 'updateOwner' of contract 'BadContract' at line 7: Parameters [newOwner] are not validated.",
+          "line_number": 7,
+          "code_snippet": "       5 |     }\n       6 | \n>>>    7 |     function updateOwner(address newOwner) external {\n       8 |         // anyone can call this\n       9 |     }"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_files": 1,
+    "total_bugs": 15,
+    "by_severity": {
+      "critical": 0,
+      "high": 0,
+      "medium": 15,
+      "low": 0
+    },
+    "by_category": {
+      "access_control": 4,
+      "code_quality": 2,
+      "functions": 2,
+      "optimization": 1,
+      "security": 4,
+      "validation": 2
+    },
+    "files_with_issues": 1,
+    "clean_files": 0
+  }
+}

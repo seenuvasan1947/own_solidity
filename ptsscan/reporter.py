@@ -4,8 +4,9 @@ Handles output generation in JSON and Excel formats
 """
 
 import json
+import re
 from datetime import datetime
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional, Tuple
 from pathlib import Path
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -24,6 +25,80 @@ class Reporter:
         """
         self.results = results
         self.timestamp = datetime.now().isoformat()
+        self._enhance_results()  # Add line numbers and code snippets
+    
+    def _extract_line_number(self, violation: str) -> Optional[int]:
+        """
+        Extract line number from violation message
+        Supports various formats: "line 123", "at line 45", "[Line 67]", etc.
+        """
+        patterns = [
+            r'line\s+(\d+)',  # "line 123" or "at line 123"
+            r'\[Line\s+(\d+)\]',  # "[Line 123]"
+            r'at\s+line\s+(\d+)',  # "at line 123"
+            r'on\s+line\s+(\d+)',  # "on line 123"
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, violation, re.IGNORECASE)
+            if match:
+                return int(match.group(1))
+        
+        return None
+    
+    def _get_code_snippet(self, filepath: str, line_number: int, context_lines: int = 2) -> Optional[str]:
+        """
+        Extract code snippet from file around the given line number
+        
+        Args:
+            filepath: Path to the source file
+            line_number: Line number to extract
+            context_lines: Number of lines before and after to include
+        
+        Returns:
+            Code snippet with line numbers, or None if file cannot be read
+        """
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+            
+            if line_number < 1 or line_number > len(lines):
+                return None
+            
+            # Calculate range (1-indexed)
+            start = max(1, line_number - context_lines)
+            end = min(len(lines), line_number + context_lines)
+            
+            # Build snippet with line numbers
+            snippet_lines = []
+            for i in range(start - 1, end):
+                line_num = i + 1
+                prefix = ">>>" if line_num == line_number else "   "
+                snippet_lines.append(f"{prefix} {line_num:4d} | {lines[i].rstrip()}")
+            
+            return "\n".join(snippet_lines)
+        
+        except Exception:
+            return None
+    
+    def _enhance_results(self):
+        """
+        Enhance results by adding line numbers and code snippets to each bug
+        """
+        for file_result in self.results:
+            filepath = file_result['file']
+            
+            for bug in file_result['bugs']:
+                # Extract line number from violation message
+                line_num = self._extract_line_number(bug['violation'])
+                bug['line_number'] = line_num
+                
+                # Get code snippet if line number found
+                if line_num:
+                    snippet = self._get_code_snippet(filepath, line_num)
+                    bug['code_snippet'] = snippet
+                else:
+                    bug['code_snippet'] = None
     
     def generate_json(self, output_file: str):
         """
@@ -52,13 +127,16 @@ class Reporter:
             
             # Add bug details
             for bug in file_result['bugs']:
-                file_report['bugs'].append({
+                bug_entry = {
                     'rule': bug['rule'],
                     'category': bug['category'],
                     'severity': bug['severity'],
                     'description': bug['description'],
-                    'violation': bug['violation']
-                })
+                    'violation': bug['violation'],
+                    'line_number': bug.get('line_number'),
+                    'code_snippet': bug.get('code_snippet')
+                }
+                file_report['bugs'].append(bug_entry)
             
             report['results'].append(file_report)
         
@@ -158,7 +236,7 @@ class Reporter:
         ws = wb.create_sheet("All Issues")
         
         # Headers
-        headers = ['#', 'File', 'Category', 'Rule', 'Severity', 'Description', 'Violation Details']
+        headers = ['#', 'File', 'Line', 'Category', 'Rule', 'Severity', 'Description', 'Violation Details', 'Code Snippet']
         for col, header in enumerate(headers, 1):
             cell = ws.cell(row=1, column=col, value=header)
             cell.font = Font(bold=True, color="FFFFFF")
@@ -173,10 +251,16 @@ class Reporter:
             for bug in file_result['bugs']:
                 ws.cell(row=row, column=1, value=bug_num)
                 ws.cell(row=row, column=2, value=Path(bug['file']).name)
-                ws.cell(row=row, column=3, value=bug['category'].replace('_', ' ').title())
-                ws.cell(row=row, column=4, value=bug['rule'])
                 
-                severity_cell = ws.cell(row=row, column=5, value=bug['severity'].upper())
+                # Line number
+                line_cell = ws.cell(row=row, column=3, value=bug.get('line_number') or 'N/A')
+                if bug.get('line_number'):
+                    line_cell.font = Font(bold=True, color="0000FF")
+                
+                ws.cell(row=row, column=4, value=bug['category'].replace('_', ' ').title())
+                ws.cell(row=row, column=5, value=bug['rule'])
+                
+                severity_cell = ws.cell(row=row, column=6, value=bug['severity'].upper())
                 # Color code severity
                 if bug['severity'] == 'critical':
                     severity_cell.fill = PatternFill(start_color="FF0000", end_color="FF0000", fill_type="solid")
@@ -188,8 +272,13 @@ class Reporter:
                 elif bug['severity'] == 'low':
                     severity_cell.fill = PatternFill(start_color="90EE90", end_color="90EE90", fill_type="solid")
                 
-                ws.cell(row=row, column=6, value=bug['description'])
-                ws.cell(row=row, column=7, value=bug['violation'])
+                ws.cell(row=row, column=7, value=bug['description'])
+                ws.cell(row=row, column=8, value=bug['violation'])
+                
+                # Code snippet with monospace font
+                snippet_cell = ws.cell(row=row, column=9, value=bug.get('code_snippet') or 'N/A')
+                snippet_cell.font = Font(name='Courier New', size=9)
+                snippet_cell.alignment = Alignment(wrap_text=True, vertical='top')
                 
                 row += 1
                 bug_num += 1
@@ -197,11 +286,13 @@ class Reporter:
         # Adjust column widths
         ws.column_dimensions['A'].width = 5
         ws.column_dimensions['B'].width = 30
-        ws.column_dimensions['C'].width = 20
-        ws.column_dimensions['D'].width = 30
-        ws.column_dimensions['E'].width = 12
-        ws.column_dimensions['F'].width = 40
-        ws.column_dimensions['G'].width = 50
+        ws.column_dimensions['C'].width = 8   # Line number
+        ws.column_dimensions['D'].width = 20  # Category
+        ws.column_dimensions['E'].width = 30  # Rule
+        ws.column_dimensions['F'].width = 12  # Severity
+        ws.column_dimensions['G'].width = 40  # Description
+        ws.column_dimensions['H'].width = 50  # Violation
+        ws.column_dimensions['I'].width = 60  # Code snippet
         
         # Add filters
         ws.auto_filter.ref = ws.dimensions

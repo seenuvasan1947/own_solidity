@@ -1,0 +1,340 @@
+{
+  "scan_info": {
+    "timestamp": "2025-12-27T23:08:45.955871",
+    "total_files": 1,
+    "total_bugs": 34
+  },
+  "results": [
+    {
+      "file": "C:\\Users\\Finstein-Admin\\Documents\\cyber_product\\own\\own_solidity\\test\\MyContract.sol",
+      "bugs_count": 34,
+      "rules_applied": 125,
+      "bugs": [
+        {
+          "rule": "AccessControlActorsDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Unclear actor access control in function 'dangerous' of contract 'Test' at line 4: No explicit access control check found.",
+          "line_number": 4,
+          "code_snippet": "       2 | \n       3 | contract Test {\n>>>    4 |     function dangerous() public {\n       5 |         address(this).call{value: 1 ether}(\"\");\n       6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));"
+        },
+        {
+          "rule": "AccessControlActorsDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Unclear actor access control in function 'safe' of contract 'Test' at line 9: No explicit access control check found.",
+          "line_number": 9,
+          "code_snippet": "       7 |     }\n       8 | \n>>>    9 |     function safe() public {\n      10 |         payable(address(this)).transfer(1 ether);\n      11 |     }"
+        },
+        {
+          "rule": "AccessControlActorsDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Unclear actor access control in function 'destroyIt' of contract 'UnsafeContract' at line 19: No explicit access control check found.",
+          "line_number": 19,
+          "code_snippet": "      17 |     }\n      18 | \n>>>   19 |     function destroyIt() external {\n      20 |         selfdestruct(payable(tx.origin));\n      21 |     }"
+        },
+        {
+          "rule": "AccessControlDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [Line 4] Function `dangerous` lacks access control (public/external with no modifiers).",
+          "line_number": 4,
+          "code_snippet": "       2 | \n       3 | contract Test {\n>>>    4 |     function dangerous() public {\n       5 |         address(this).call{value: 1 ether}(\"\");\n       6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));"
+        },
+        {
+          "rule": "AccessControlDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [Line 9] Function `safe` lacks access control (public/external with no modifiers).",
+          "line_number": 9,
+          "code_snippet": "       7 |     }\n       8 | \n>>>    9 |     function safe() public {\n      10 |         payable(address(this)).transfer(1 ether);\n      11 |     }"
+        },
+        {
+          "rule": "AccessControlDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [Line 15] Function `kill` lacks access control (public/external with no modifiers).",
+          "line_number": 15,
+          "code_snippet": "      13 | \n      14 | contract UnsafeContract {\n>>>   15 |     function kill() public {\n      16 |         selfdestruct(payable(msg.sender));\n      17 |     }"
+        },
+        {
+          "rule": "AccessControlDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [Line 19] Function `destroyIt` lacks access control (public/external with no modifiers).",
+          "line_number": 19,
+          "code_snippet": "      17 |     }\n      18 | \n>>>   19 |     function destroyIt() external {\n      20 |         selfdestruct(payable(tx.origin));\n      21 |     }"
+        },
+        {
+          "rule": "ArbitrarySendEthDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "Detects functions that send Ether to arbitrary destinations.",
+          "violation": "❌ [S-AC-001] CRITICAL: Arbitrary send Ether in function 'dangerous' of contract 'Test' at line 5: Function sends Ether to arbitrary address without proper access control. Add access control modifiers or ensure the destination is validated.",
+          "line_number": 5,
+          "code_snippet": "       3 | contract Test {\n       4 |     function dangerous() public {\n>>>    5 |         address(this).call{value: 1 ether}(\"\");\n       6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));\n       7 |     }"
+        },
+        {
+          "rule": "ArbitrarySendEthDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "Detects functions that send Ether to arbitrary destinations.",
+          "violation": "❌ [S-AC-001] CRITICAL: Arbitrary send Ether in function 'safe' of contract 'Test' at line 10: Function sends Ether to arbitrary address without proper access control. Add access control modifiers or ensure the destination is validated.",
+          "line_number": 10,
+          "code_snippet": "       8 | \n       9 |     function safe() public {\n>>>   10 |         payable(address(this)).transfer(1 ether);\n      11 |     }\n      12 | }"
+        },
+        {
+          "rule": "VisibilityStrictnessDetector",
+          "category": "code_quality",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [SOL-Basics-Function-7] Function 'dangerous' of contract 'Test' at line 4 is 'public' but is only called internally. Consider making it 'internal' or 'private'.",
+          "line_number": 4,
+          "code_snippet": "       2 | \n       3 | contract Test {\n>>>    4 |     function dangerous() public {\n       5 |         address(this).call{value: 1 ether}(\"\");\n       6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));"
+        },
+        {
+          "rule": "VisibilityStrictnessDetector",
+          "category": "code_quality",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [SOL-Basics-Function-7] Function 'safe' of contract 'Test' at line 9 is 'public' but is only called internally. Consider making it 'internal' or 'private'.",
+          "line_number": 9,
+          "code_snippet": "       7 |     }\n       8 | \n>>>    9 |     function safe() public {\n      10 |         payable(address(this)).transfer(1 ether);\n      11 |     }"
+        },
+        {
+          "rule": "VisibilityStrictnessDetector",
+          "category": "code_quality",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [SOL-Basics-Function-7] Function 'kill' of contract 'UnsafeContract' at line 15 is 'public' but is only called internally. Consider making it 'internal' or 'private'.",
+          "line_number": 15,
+          "code_snippet": "      13 | \n      14 | contract UnsafeContract {\n>>>   15 |     function kill() public {\n      16 |         selfdestruct(payable(msg.sender));\n      17 |     }"
+        },
+        {
+          "rule": "VisibilityStrictnessDetector",
+          "category": "code_quality",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [SOL-Basics-Function-7] Function 'destroyIt' of contract 'UnsafeContract' at line 19 is 'external' but is only called internally. Consider making it 'internal' or 'private'.",
+          "line_number": 19,
+          "code_snippet": "      17 |     }\n      18 | \n>>>   19 |     function destroyIt() external {\n      20 |         selfdestruct(payable(tx.origin));\n      21 |     }"
+        },
+        {
+          "rule": "PublicToExternalDetector",
+          "category": "optimization",
+          "severity": "medium",
+          "description": "Detects public functions that could be declared external.",
+          "violation": "⚠️  [S-OPT-001] OPTIMIZATION: Function 'dangerous' in contract 'Test' at line 4: Public function is never called internally and should be declared external for gas optimization.",
+          "line_number": 4,
+          "code_snippet": "       2 | \n       3 | contract Test {\n>>>    4 |     function dangerous() public {\n       5 |         address(this).call{value: 1 ether}(\"\");\n       6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));"
+        },
+        {
+          "rule": "PublicToExternalDetector",
+          "category": "optimization",
+          "severity": "medium",
+          "description": "Detects public functions that could be declared external.",
+          "violation": "⚠️  [S-OPT-001] OPTIMIZATION: Function 'safe' in contract 'Test' at line 9: Public function is never called internally and should be declared external for gas optimization.",
+          "line_number": 9,
+          "code_snippet": "       7 |     }\n       8 | \n>>>    9 |     function safe() public {\n      10 |         payable(address(this)).transfer(1 ether);\n      11 |     }"
+        },
+        {
+          "rule": "PublicToExternalDetector",
+          "category": "optimization",
+          "severity": "medium",
+          "description": "Detects public functions that could be declared external.",
+          "violation": "⚠️  [S-OPT-001] OPTIMIZATION: Function 'kill' in contract 'UnsafeContract' at line 15: Public function is never called internally and should be declared external for gas optimization.",
+          "line_number": 15,
+          "code_snippet": "      13 | \n      14 | contract UnsafeContract {\n>>>   15 |     function kill() public {\n      16 |         selfdestruct(payable(msg.sender));\n      17 |     }"
+        },
+        {
+          "rule": "BackdoorDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "Detects functions with suspicious names that may indicate backdoor functionality.",
+          "violation": "⚠️  [S-SEC-008] WARNING: Potentially hidden admin function in contract 'UnsafeContract' at line 15: Function 'kill' appears to have administrative capabilities but uses a non-standard name.",
+          "line_number": 15,
+          "code_snippet": "      13 | \n      14 | contract UnsafeContract {\n>>>   15 |     function kill() public {\n      16 |         selfdestruct(payable(msg.sender));\n      17 |     }"
+        },
+        {
+          "rule": "BackdoorDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "Detects functions with suspicious names that may indicate backdoor functionality.",
+          "violation": "⚠️  [S-SEC-008] WARNING: Potentially hidden admin function in contract 'UnsafeContract' at line 19: Function 'destroyIt' appears to have administrative capabilities but uses a non-standard name.",
+          "line_number": 19,
+          "code_snippet": "      17 |     }\n      18 | \n>>>   19 |     function destroyIt() external {\n      20 |         selfdestruct(payable(tx.origin));\n      21 |     }"
+        },
+        {
+          "rule": "CommitRevealDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Possible Front-running vulnerability at line 4: The protocol might not implement a properly user-bound commit-reveal scheme.",
+          "line_number": 4,
+          "code_snippet": "       2 | \n       3 | contract Test {\n>>>    4 |     function dangerous() public {\n       5 |         address(this).call{value: 1 ether}(\"\");\n       6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));"
+        },
+        {
+          "rule": "CommitRevealDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Possible Front-running vulnerability at line 9: The protocol might not implement a properly user-bound commit-reveal scheme.",
+          "line_number": 9,
+          "code_snippet": "       7 |     }\n       8 | \n>>>    9 |     function safe() public {\n      10 |         payable(address(this)).transfer(1 ether);\n      11 |     }"
+        },
+        {
+          "rule": "CommitRevealDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Possible Front-running vulnerability at line 15: The protocol might not implement a properly user-bound commit-reveal scheme.",
+          "line_number": 15,
+          "code_snippet": "      13 | \n      14 | contract UnsafeContract {\n>>>   15 |     function kill() public {\n      16 |         selfdestruct(payable(msg.sender));\n      17 |     }"
+        },
+        {
+          "rule": "CommitRevealDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Possible Front-running vulnerability at line 19: The protocol might not implement a properly user-bound commit-reveal scheme.",
+          "line_number": 19,
+          "code_snippet": "      17 |     }\n      18 | \n>>>   19 |     function destroyIt() external {\n      20 |         selfdestruct(payable(tx.origin));\n      21 |     }"
+        },
+        {
+          "rule": "FrontRunningDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [SOL-Basics-Function-3] Potential front-running vulnerability in function 'dangerous' of contract 'Test' at line 4: Function modifies state without protection mechanisms.",
+          "line_number": 4,
+          "code_snippet": "       2 | \n       3 | contract Test {\n>>>    4 |     function dangerous() public {\n       5 |         address(this).call{value: 1 ether}(\"\");\n       6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));"
+        },
+        {
+          "rule": "FrontRunningDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [SOL-Basics-Function-3] Potential front-running vulnerability in function 'safe' of contract 'Test' at line 9: Function modifies state without protection mechanisms.",
+          "line_number": 9,
+          "code_snippet": "       7 |     }\n       8 | \n>>>    9 |     function safe() public {\n      10 |         payable(address(this)).transfer(1 ether);\n      11 |     }"
+        },
+        {
+          "rule": "LowLevelCallsDetector",
+          "category": "security",
+          "severity": "low",
+          "description": "Detects usage of low-level calls which are error-prone.",
+          "violation": "⚠️  [S-SEC-017] WARNING: Unchecked low-level call .call() in function 'dangerous' of contract 'Test' at line 5: Return value is not checked. Ensure the call success is verified or failures are logged.",
+          "line_number": 5,
+          "code_snippet": "       3 | contract Test {\n       4 |     function dangerous() public {\n>>>    5 |         address(this).call{value: 1 ether}(\"\");\n       6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));\n       7 |     }"
+        },
+        {
+          "rule": "LowLevelCallsDetector",
+          "category": "security",
+          "severity": "low",
+          "description": "Detects usage of low-level calls which are error-prone.",
+          "violation": "⚠️  [S-SEC-017] WARNING: Unchecked low-level call .delegatecall() in function 'dangerous' of contract 'Test' at line 6: Return value is not checked. Ensure the call success is verified or failures are logged.",
+          "line_number": 6,
+          "code_snippet": "       4 |     function dangerous() public {\n       5 |         address(this).call{value: 1 ether}(\"\");\n>>>    6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));\n       7 |     }\n       8 | "
+        },
+        {
+          "rule": "SelfDestructDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Unsafe selfdestruct() at line 16: selfdestruct(payable(msg.sender))",
+          "line_number": 16,
+          "code_snippet": "      14 | contract UnsafeContract {\n      15 |     function kill() public {\n>>>   16 |         selfdestruct(payable(msg.sender));\n      17 |     }\n      18 | "
+        },
+        {
+          "rule": "SelfDestructDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Unsafe selfdestruct() at line 20: selfdestruct(payable(tx.origin))",
+          "line_number": 20,
+          "code_snippet": "      18 | \n      19 |     function destroyIt() external {\n>>>   20 |         selfdestruct(payable(tx.origin));\n      21 |     }\n      22 | }"
+        },
+        {
+          "rule": "UncheckedLowLevelCallDetector",
+          "category": "security",
+          "severity": "low",
+          "description": "Detects unchecked return values from low-level calls.",
+          "violation": "❌ [S-SEC-012] CRITICAL: Unchecked low-level call in function 'dangerous' of contract 'Test' at line 5: Low-level call does not capture or check return value. This can lead to silent failures.",
+          "line_number": 5,
+          "code_snippet": "       3 | contract Test {\n       4 |     function dangerous() public {\n>>>    5 |         address(this).call{value: 1 ether}(\"\");\n       6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));\n       7 |     }"
+        },
+        {
+          "rule": "UncheckedLowLevelCallDetector",
+          "category": "security",
+          "severity": "low",
+          "description": "Detects unchecked return values from low-level calls.",
+          "violation": "❌ [S-SEC-012] CRITICAL: Unchecked low-level call in function 'dangerous' of contract 'Test' at line 6: Low-level call does not capture or check return value. This can lead to silent failures.",
+          "line_number": 6,
+          "code_snippet": "       4 |     function dangerous() public {\n       5 |         address(this).call{value: 1 ether}(\"\");\n>>>    6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));\n       7 |     }\n       8 | "
+        },
+        {
+          "rule": "UncheckedLowLevelReturnValuesDetector",
+          "category": "security",
+          "severity": "low",
+          "description": "Detects unchecked return values from low-level calls.",
+          "violation": "❌ [S-SEC-018] MEDIUM: Unchecked low-level call in function 'dangerous' of contract 'Test' at line 5: Low-level call return value is not captured or checked. Capture and check: (bool success, ) = addr.call(...); require(success, \"Call failed\");",
+          "line_number": 5,
+          "code_snippet": "       3 | contract Test {\n       4 |     function dangerous() public {\n>>>    5 |         address(this).call{value: 1 ether}(\"\");\n       6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));\n       7 |     }"
+        },
+        {
+          "rule": "UncheckedLowLevelReturnValuesDetector",
+          "category": "security",
+          "severity": "low",
+          "description": "Detects unchecked return values from low-level calls.",
+          "violation": "❌ [S-SEC-018] MEDIUM: Unchecked low-level call in function 'dangerous' of contract 'Test' at line 5: Low-level call return value is not captured or checked. Capture and check: (bool success, ) = addr.call(...); require(success, \"Call failed\");",
+          "line_number": 5,
+          "code_snippet": "       3 | contract Test {\n       4 |     function dangerous() public {\n>>>    5 |         address(this).call{value: 1 ether}(\"\");\n       6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));\n       7 |     }"
+        },
+        {
+          "rule": "UncheckedLowLevelReturnValuesDetector",
+          "category": "security",
+          "severity": "low",
+          "description": "Detects unchecked return values from low-level calls.",
+          "violation": "❌ [S-SEC-018] MEDIUM: Unchecked low-level call in function 'dangerous' of contract 'Test' at line 6: Low-level call return value is not captured or checked. Capture and check: (bool success, ) = addr.call(...); require(success, \"Call failed\");",
+          "line_number": 6,
+          "code_snippet": "       4 |     function dangerous() public {\n       5 |         address(this).call{value: 1 ether}(\"\");\n>>>    6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));\n       7 |     }\n       8 | "
+        },
+        {
+          "rule": "UncheckedLowLevelReturnValuesDetector",
+          "category": "security",
+          "severity": "low",
+          "description": "Detects unchecked return values from low-level calls.",
+          "violation": "❌ [S-SEC-018] MEDIUM: Unchecked low-level call in function 'dangerous' of contract 'Test' at line 6: Low-level call return value is not captured or checked. Capture and check: (bool success, ) = addr.call(...); require(success, \"Call failed\");",
+          "line_number": 6,
+          "code_snippet": "       4 |     function dangerous() public {\n       5 |         address(this).call{value: 1 ether}(\"\");\n>>>    6 |         address(this).delegatecall(abi.encodeWithSignature(\"doSomething()\"));\n       7 |     }\n       8 | "
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_files": 1,
+    "total_bugs": 34,
+    "by_severity": {
+      "critical": 0,
+      "high": 0,
+      "medium": 26,
+      "low": 8
+    },
+    "by_category": {
+      "access_control": 9,
+      "code_quality": 4,
+      "optimization": 3,
+      "security": 18
+    },
+    "files_with_issues": 1,
+    "clean_files": 0
+  }
+}
