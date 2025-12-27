@@ -1,0 +1,141 @@
+{
+  "scan_info": {
+    "timestamp": "2025-12-27T22:59:34.664436",
+    "total_files": 1,
+    "total_bugs": 15
+  },
+  "results": [
+    {
+      "file": "C:\\Users\\Finstein-Admin\\Documents\\cyber_product\\own\\own_solidity\\test_contracts\\AccessControlDetector_bad.sol",
+      "bugs_count": 15,
+      "rules_applied": 124,
+      "bugs": [
+        {
+          "rule": "AccessControlActorsDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Unclear actor access control in function 'withdrawAll' of contract 'BadContract' at line 3: No explicit access control check found."
+        },
+        {
+          "rule": "AccessControlActorsDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Unclear actor access control in function 'updateOwner' of contract 'BadContract' at line 7: No explicit access control check found."
+        },
+        {
+          "rule": "AccessControlDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [Line 3] Function `withdrawAll` lacks access control (public/external with no modifiers)."
+        },
+        {
+          "rule": "AccessControlDetector",
+          "category": "access_control",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [Line 7] Function `updateOwner` lacks access control (public/external with no modifiers)."
+        },
+        {
+          "rule": "VisibilityStrictnessDetector",
+          "category": "code_quality",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [SOL-Basics-Function-7] Function 'withdrawAll' of contract 'BadContract' at line 3 is 'public' but is only called internally. Consider making it 'internal' or 'private'."
+        },
+        {
+          "rule": "VisibilityStrictnessDetector",
+          "category": "code_quality",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [SOL-Basics-Function-7] Function 'updateOwner' of contract 'BadContract' at line 7 is 'external' but is only called internally. Consider making it 'internal' or 'private'."
+        },
+        {
+          "rule": "UnimplementedFunctionDetector",
+          "category": "functions",
+          "severity": "medium",
+          "description": "Detects functions that are declared but not implemented.",
+          "violation": "⚠️  [S-FNC-003] WARNING: Unimplemented function in contract 'BadContract' at line 3: Function 'withdrawAll' is declared but not implemented. Either implement the function or mark the contract as abstract."
+        },
+        {
+          "rule": "UnimplementedFunctionDetector",
+          "category": "functions",
+          "severity": "medium",
+          "description": "Detects functions that are declared but not implemented.",
+          "violation": "⚠️  [S-FNC-003] WARNING: Unimplemented function in contract 'BadContract' at line 7: Function 'updateOwner' is declared but not implemented. Either implement the function or mark the contract as abstract."
+        },
+        {
+          "rule": "PublicToExternalDetector",
+          "category": "optimization",
+          "severity": "medium",
+          "description": "Detects public functions that could be declared external.",
+          "violation": "⚠️  [S-OPT-001] OPTIMIZATION: Function 'withdrawAll' in contract 'BadContract' at line 3: Public function is never called internally and should be declared external for gas optimization."
+        },
+        {
+          "rule": "BackdoorDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "Detects functions with suspicious names that may indicate backdoor functionality.",
+          "violation": "⚠️  [S-SEC-008] WARNING: Potentially hidden admin function in contract 'BadContract' at line 3: Function 'withdrawAll' appears to have administrative capabilities but uses a non-standard name."
+        },
+        {
+          "rule": "BackdoorDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "Detects functions with suspicious names that may indicate backdoor functionality.",
+          "violation": "⚠️  [S-SEC-008] WARNING: Potentially hidden admin function in contract 'BadContract' at line 7: Function 'updateOwner' appears to have administrative capabilities but uses a non-standard name."
+        },
+        {
+          "rule": "CommitRevealDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Possible Front-running vulnerability at line 3: The protocol might not implement a properly user-bound commit-reveal scheme."
+        },
+        {
+          "rule": "CommitRevealDetector",
+          "category": "security",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Possible Front-running vulnerability at line 7: The protocol might not implement a properly user-bound commit-reveal scheme."
+        },
+        {
+          "rule": "EdgeCaseInputDetector",
+          "category": "validation",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ [SOL-Basics-Function-5] Missing edge case validation in function 'updateOwner' of contract 'BadContract' at line 7: Parameters [newOwner] lack validation for edge cases (0, max values)."
+        },
+        {
+          "rule": "InputsValidationDetector",
+          "category": "validation",
+          "severity": "medium",
+          "description": "No description available",
+          "violation": "❌ Missing input validation in function 'updateOwner' of contract 'BadContract' at line 7: Parameters [newOwner] are not validated."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_files": 1,
+    "total_bugs": 15,
+    "by_severity": {
+      "critical": 0,
+      "high": 0,
+      "medium": 15,
+      "low": 0
+    },
+    "by_category": {
+      "access_control": 4,
+      "code_quality": 2,
+      "functions": 2,
+      "optimization": 1,
+      "security": 4,
+      "validation": 2
+    },
+    "files_with_issues": 1,
+    "clean_files": 0
+  }
+}

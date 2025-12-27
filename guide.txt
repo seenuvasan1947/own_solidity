@@ -1,0 +1,19 @@
+# Basic scan
+ptsscan -i contract.sol
+
+# Recursive directory scan
+ptsscan -i ./contracts -r
+
+# Generate reports
+ptsscan -i ./contracts -r -o results.json
+ptsscan -i ./contracts -r -o results.xlsx -f excel
+ptsscan -i ./contracts -r -o results -f both
+
+# Filter and exclude
+ptsscan -i ./contracts -r --severity critical high
+ptsscan -i ./contracts -r --categories access_control reentrancy
+ptsscan -i ./contracts -r --exclude "*test*.sol"
+
+# Utilities
+ptsscan --list-rules
+ptsscan --help
